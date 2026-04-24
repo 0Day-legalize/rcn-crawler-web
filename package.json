@@ -1,0 +1,17 @@
+{
+  "name": "rcn-crawler-web",
+  "version": "1.0.0",
+  "description": "Public web frontend for RCN WebCrawler",
+  "main": "backend/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node backend/server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "express": "^4.22.1",
+    "express-rate-limit": "^7.5.1",
+    "uuid": "^9.0.1"
+  }
+}

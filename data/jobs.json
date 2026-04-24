@@ -1,0 +1,17 @@
+[
+  {
+    "id": "10264e66-0722-4c50-9849-113068189b77",
+    "url": "https://crawler-test.com/",
+    "search_terms": "test",
+    "onion_only": false,
+    "status": "pending",
+    "created_at": "2026-04-23T12:02:43.944Z",
+    "started_at": null,
+    "finished_at": null,
+    "ip": "127.0.0.1",
+    "log": "",
+    "results": null,
+    "page_count": 0,
+    "error": null
+  }
+]

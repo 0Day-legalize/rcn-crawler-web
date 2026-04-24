@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RCN WebCrawler</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0d1117; color: #e6edf3;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh; padding: 40px 24px;
+      max-width: 720px; margin: 0 auto;
+    }
+
+    header { text-align: center; margin-bottom: 40px; }
+    header h1 { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+    header p  { font-size: 13px; color: #4b5563; }
+
+    .card {
+      background: rgba(22,27,34,0.8);
+      border: 1px solid #21262d;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .card-title { font-size: 13px; font-weight: 600; color: #e6edf3; margin-bottom: 16px; }
+
+    label { font-size: 12px; color: #8b949e; display: block; margin-bottom: 6px; }
+
+    input[type="text"] {
+      width: 100%; background: #0d1117; border: 1px solid #30363d;
+      border-radius: 8px; padding: 10px 14px; color: #e6edf3;
+      font-size: 13px; outline: none; transition: border-color 0.15s;
+      margin-bottom: 16px;
+    }
+    input[type="text"]:focus { border-color: #58a6ff; }
+    input[type="text"]::placeholder { color: #4b5563; }
+
+    .toggle-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .toggle { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; inset: 0; background: #21262d; border-radius: 24px; cursor: pointer; transition: background 0.2s; }
+    .slider::before { content: ""; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: #8b949e; border-radius: 50%; transition: transform 0.2s, background 0.2s; }
+    .toggle input:checked + .slider { background: rgba(168,85,247,0.3); }
+    .toggle input:checked + .slider::before { transform: translateX(20px); background: #a855f7; }
+    .toggle-label { font-size: 12px; color: #8b949e; }
+
+    /* TOS */
+    .tos-box {
+      background: #010409; border: 1px solid #21262d; border-radius: 8px;
+      padding: 16px; max-height: 220px; overflow-y: auto;
+      font-size: 11px; line-height: 1.8; color: #6b7280;
+      margin-bottom: 14px;
+    }
+    .tos-box h3 { color: #8b949e; font-size: 12px; margin-bottom: 8px; }
+    .tos-box h4 { color: #8b949e; font-size: 11px; margin: 10px 0 4px; }
+    .tos-box ul { padding-left: 16px; }
+    .tos-box li { margin-bottom: 4px; }
+    .tos-accept { display: flex; align-items: center; gap: 10px; font-size: 12px; color: #8b949e; margin-bottom: 16px; cursor: pointer; }
+    .tos-accept input { width: 14px; height: 14px; cursor: pointer; accent-color: #22c55e; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 22px; border-radius: 8px; font-size: 13px;
+      font-weight: 500; cursor: pointer; border: none;
+      transition: background 0.15s, opacity 0.15s;
+    }
+    .btn-primary { background: #238636; color: #fff; }
+    .btn-primary:hover { background: #2ea043; }
+    .btn:disabled { opacity: 0.4; cursor: default; }
+
+    #error-msg {
+      display: none; margin-top: 12px; font-size: 12px; color: #f85149;
+      background: rgba(248,81,73,0.08); border: 1px solid #f8514930;
+      border-radius: 6px; padding: 8px 12px;
+    }
+
+    /* Stats bar */
+    .stat-row { display: flex; gap: 32px; margin-top: 8px; }
+    .stat { font-size: 12px; color: #8b949e; }
+    .stat span { color: #58a6ff; font-weight: 600; }
+
+    /* How it works */
+    .steps { display: flex; flex-direction: column; gap: 12px; }
+    .step { display: flex; gap: 14px; align-items: flex-start; }
+    .step-num {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: rgba(88,166,255,0.15); border: 1px solid #58a6ff30;
+      color: #58a6ff; font-size: 11px; font-weight: 600;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .step-text { font-size: 12px; color: #8b949e; line-height: 1.6; padding-top: 3px; }
+    .step-text strong { color: #e6edf3; }
+
+    footer { text-align: center; margin-top: 40px; font-size: 11px; color: #374151; }
+    footer a { color: #4b5563; text-decoration: none; }
+    footer a:hover { color: #8b949e; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🕷️ RCN WebCrawler</h1>
+  <p>Dark web & clearnet crawler — powered by Tor</p>
+</header>
+
+<!-- Submit card -->
+<div class="card">
+  <div class="card-title">New Crawl</div>
+
+  <label>Seed URL</label>
+  <input type="text" id="url" placeholder="http://example.onion/ or https://example.com" autocomplete="off">
+
+  <label>Search terms <span style="color:#4b5563">(optional, comma separated)</span></label>
+  <input type="text" id="terms" placeholder="malware, exploit, leak" autocomplete="off">
+
+  <div class="toggle-row">
+    <label class="toggle">
+      <input type="checkbox" id="onion-only">
+      <span class="slider"></span>
+    </label>
+    <span class="toggle-label">.onion only — skip all clearnet links</span>
+  </div>
+
+  <!-- TOS -->
+  <div class="tos-box">
+    <h3>Terms of Service</h3>
+    <p>By using RCN WebCrawler you agree to the following terms. Read them carefully before submitting a crawl.</p>
+
+    <h4>1. Permitted Use</h4>
+    <ul>
+      <li>Security research, academic study, and lawful OSINT investigations only.</li>
+      <li>You must have authorization to crawl any target you submit.</li>
+      <li>This tool is provided for educational purposes.</li>
+    </ul>
+
+    <h4>2. Prohibited Use</h4>
+    <ul>
+      <li>Crawling or accessing illegal content of any kind, including but not limited to child sexual abuse material (CSAM).</li>
+      <li>Crawling systems you do not own or have explicit permission to crawl.</li>
+      <li>Using results to facilitate harassment, fraud, or any criminal activity.</li>
+      <li>Attempting to abuse, overload, or circumvent rate limits on this service.</li>
+      <li>Submitting URLs that host malware with intent to compromise this service.</li>
+    </ul>
+
+    <h4>3. Limitations</h4>
+    <ul>
+      <li>Maximum 50 pages per crawl. Maximum 5 crawls per hour per IP.</li>
+      <li>One active job per IP at a time.</li>
+      <li>Results are stored temporarily and may be deleted at any time.</li>
+    </ul>
+
+    <h4>4. Logging</h4>
+    <ul>
+      <li>Your IP address and submitted URLs are logged for abuse prevention.</li>
+      <li>Logs may be shared with authorities if illegal activity is detected.</li>
+    </ul>
+
+    <h4>5. Disclaimer</h4>
+    <p style="margin-top:6px">This service is provided as-is with no warranty. The operator is not responsible for how results are used. Violation of these terms results in immediate and permanent ban.</p>
+  </div>
+
+  <label class="tos-accept">
+    <input type="checkbox" id="tos">
+    I have read and agree to the Terms of Service
+  </label>
+
+  <button class="btn btn-primary" id="btn-submit" disabled>▶ Start crawl</button>
+  <div id="error-msg"></div>
+</div>
+
+<!-- How it works -->
+<div class="card">
+  <div class="card-title">How it works</div>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Submit a URL</strong> — enter a seed URL and optional search terms, accept the TOS, and click Start.</div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Crawl runs</strong> — the crawler follows links from your seed URL through Tor, up to 50 pages. You get a job link to track progress.</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Get results</strong> — when done, view matched pages and download results as a compressed JSON file.</div></div>
+  </div>
+</div>
+
+<footer>
+  Built by <a href="https://github.com/0Day-legalize">RCN</a> &nbsp;·&nbsp;
+  <a href="https://github.com/0Day-legalize/rcn-crawler">GitHub</a> &nbsp;·&nbsp;
+  For research use only
+</footer>
+
+<script>
+const tosEl    = document.getElementById("tos");
+const submitBtn= document.getElementById("btn-submit");
+const errorEl  = document.getElementById("error-msg");
+
+tosEl.addEventListener("change", () => {
+  submitBtn.disabled = !tosEl.checked;
+});
+
+function showError(msg) {
+  errorEl.textContent = msg;
+  errorEl.style.display = "block";
+}
+
+submitBtn.addEventListener("click", async () => {
+  errorEl.style.display = "none";
+  const url         = document.getElementById("url").value.trim();
+  const searchTerms = document.getElementById("terms").value.trim();
+  const onionOnly   = document.getElementById("onion-only").checked;
+
+  if (!url) { showError("Enter a seed URL."); return; }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Submitting…";
+
+  try {
+    const res = await fetch("/api/jobs", {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify({ url, searchTerms, onionOnly, tosAccepted: true }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      showError(data.error ?? "Failed to submit job.");
+      if (data.jobId) window.location.href = `/job.html?id=${data.jobId}`;
+      submitBtn.disabled = false;
+      submitBtn.textContent = "▶ Start crawl";
+      return;
+    }
+
+    window.location.href = `/job.html?id=${data.jobId}`;
+  } catch (err) {
+    showError(`Cannot reach server: ${err.message}`);
+    submitBtn.disabled = false;
+    submitBtn.textContent = "▶ Start crawl";
+  }
+});
+</script>
+</body>
+</html>
