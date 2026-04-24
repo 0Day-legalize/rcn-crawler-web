@@ -13,10 +13,11 @@
       --green:    #4ade80;
       --green-d:  #166534;
       --red:      #f87171;
-      --red-g:    rgba(248,113,113,0.08);
-      --bg:       #060e06;
-      --surface:  rgba(10,20,10,0.92);
-      --border:   rgba(74,222,128,0.18);
+      --red-g:    rgba(248,113,113,0.07);
+      --bg:       #030303;
+      --surface:  #000000;
+      --border:   rgba(255,255,255,0.05);
+      --border-h: rgba(74,222,128,0.2);
       --muted:    #4b7a4b;
       --text:     #d1fae5;
       --dim:      #6b9e6b;
@@ -96,9 +97,15 @@
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 8px; padding: 22px 28px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      border-radius: 6px; padding: 22px 28px;
       margin-bottom: 14px;
-      backdrop-filter: blur(4px);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.95), inset 0 1px 0 rgba(255,255,255,0.03);
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .card:hover {
+      border-color: var(--border-h);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.95), 0 0 0 1px rgba(74,222,128,0.05), inset 0 1px 0 rgba(255,255,255,0.04);
     }
     .card-title {
       font-family: 'Share Tech Mono', monospace;
@@ -149,7 +156,7 @@
 
     /* ── Log ── */
     #log {
-      background: rgba(0,0,0,0.7);
+      background: #000;
       border: 1px solid rgba(57,211,83,0.08);
       border-radius: 4px;
       padding: 14px 16px;
@@ -170,7 +177,7 @@
       border: 1px solid rgba(57,211,83,0.08);
       border-radius: 6px; padding: 14px 16px;
       margin-bottom: 10px;
-      background: rgba(0,0,0,0.4);
+      background: #000;
       transition: border-color 0.15s;
     }
     .result-item:hover { border-color: rgba(57,211,83,0.2); }

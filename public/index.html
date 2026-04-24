@@ -12,12 +12,12 @@
     :root {
       --green:    #4ade80;
       --green-d:  #166534;
-      --green-glow: rgba(74,222,128,0.15);
       --red:      #f87171;
-      --red-g:    rgba(248,113,113,0.08);
-      --bg:       #060e06;
-      --surface:  rgba(10,20,10,0.92);
-      --border:   rgba(74,222,128,0.18);
+      --red-g:    rgba(248,113,113,0.07);
+      --bg:       #030303;
+      --surface:  #000000;
+      --border:   rgba(255,255,255,0.05);
+      --border-h: rgba(74,222,128,0.2);
       --muted:    #4b7a4b;
       --text:     #d1fae5;
       --dim:      #6b9e6b;
@@ -142,8 +142,8 @@
     .warn-stripe {
       font-family: 'Share Tech Mono', monospace;
       font-size: 10px; color: var(--red);
-      background: var(--red-g);
-      border: 1px solid rgba(248,113,113,0.2);
+      background: #000;
+      border: 1px solid rgba(248,113,113,0.15);
       border-radius: 4px;
       padding: 8px 14px;
       text-align: center;
@@ -155,10 +155,16 @@
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      border-radius: 6px;
       padding: 26px 28px;
-      margin-bottom: 16px;
-      backdrop-filter: blur(4px);
+      margin-bottom: 14px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.95), inset 0 1px 0 rgba(255,255,255,0.03);
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .card:hover {
+      border-color: var(--border-h);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.95), 0 0 0 1px rgba(74,222,128,0.05), inset 0 1px 0 rgba(255,255,255,0.04);
     }
     .card-title {
       font-family: 'Share Tech Mono', monospace;
@@ -182,8 +188,8 @@
 
     input[type="text"] {
       width: 100%;
-      background: rgba(0,0,0,0.5);
-      border: 1px solid rgba(74,222,128,0.2);
+      background: #000;
+      border: 1px solid rgba(255,255,255,0.07);
       border-radius: 4px;
       padding: 11px 14px;
       color: var(--text);
@@ -226,8 +232,8 @@
 
     /* ── TOS ── */
     .tos-box {
-      background: rgba(0,0,0,0.4);
-      border: 1px solid rgba(248,113,113,0.12);
+      background: #000;
+      border: 1px solid rgba(255,255,255,0.05);
       border-radius: 4px; padding: 14px 16px;
       max-height: 190px; overflow-y: auto;
       font-family: 'Share Tech Mono', monospace;
