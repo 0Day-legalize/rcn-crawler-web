@@ -57,6 +57,8 @@ const db = {
     getActiveByIp(ip) {
         return readAll().find(j => j.ip === ip && ["pending", "running"].includes(j.status)) ?? null;
     },
+
+    readAll,
 };
 
 module.exports = db;

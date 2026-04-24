@@ -80,5 +80,19 @@ function poll() {
     if (job) processJob(job);
 }
 
+function purgeOldResults() {
+    const cutoff = Date.now() - 10 * 60 * 1000;
+    const jobs   = db.readAll();
+    for (const job of jobs) {
+        if (["done", "failed"].includes(job.status) && job.results !== null) {
+            const finished = new Date(job.finished_at).getTime();
+            if (finished < cutoff) {
+                db.updateJob(job.id, { results: null, log: "" });
+            }
+        }
+    }
+}
+
 setInterval(poll, 5000);
+setInterval(purgeOldResults, 60 * 1000);
 console.log("[worker] Job processor started — polling every 5s");
