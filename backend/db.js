@@ -59,6 +59,7 @@ const db = {
     },
 
     readAll,
+    writeAll,
 };
 
 module.exports = db;

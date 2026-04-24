@@ -86,16 +86,28 @@ function poll() {
 }
 
 function purgeOldResults() {
-    const cutoff = Date.now() - 60 * 60 * 1000; // 1 hour
-    const jobs   = db.readAll();
+    const oneHour  = Date.now() - 60 * 60 * 1000;
+    const thirtyD  = Date.now() - 30 * 24 * 60 * 60 * 1000;
+    const jobs     = db.readAll();
+    const keep     = [];
+
     for (const job of jobs) {
-        if (["done", "failed"].includes(job.status) && job.results !== null) {
-            const finished = new Date(job.finished_at).getTime();
-            if (finished < cutoff) {
-                db.updateJob(job.id, { results: null, log: "" });
-            }
+        if (!["done", "failed"].includes(job.status)) { keep.push(job); continue; }
+
+        const finished = new Date(job.finished_at).getTime();
+
+        // hard-delete entire record after 30 days
+        if (finished < thirtyD) continue;
+
+        // wipe results + log after 1 hour, keep metadata
+        if (finished < oneHour) {
+            keep.push({ ...job, results: null, log: "" });
+        } else {
+            keep.push(job);
         }
     }
+
+    db.writeAll(keep);
 }
 
 setInterval(poll, 5000);
