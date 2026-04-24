@@ -11,6 +11,15 @@ const RESULTS_FILE = path.join(CRAWLER_DATA, "results.json");
 
 let busy = false;
 
+function sanitizeLog(text) {
+    return text
+        .replace(/\x1b\[[0-9;]*m/g, "")   // strip ANSI colour codes
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+}
+
 function clearCrawlerState() {
     for (const f of ["visited.json", "queue.json", "results.json", "unique-links.json"]) {
         const p = path.join(CRAWLER_DATA, f);
@@ -35,12 +44,8 @@ function processJob(job) {
         stdio: ["ignore", "pipe", "pipe"],
     });
 
-    const onData = chunk => {
-        const text = chunk.toString().replace(/\x1b\[[0-9;]*m/g, "");
-        db.appendLog(job.id, text);
-    };
-    proc.stdout.on("data", onData);
-    proc.stderr.on("data", onData);
+    proc.stdout.on("data", chunk => db.appendLog(job.id, sanitizeLog(chunk.toString())));
+    proc.stderr.on("data", chunk => db.appendLog(job.id, sanitizeLog(chunk.toString())));
 
     proc.on("close", code => {
         let results   = null;
@@ -59,7 +64,7 @@ function processJob(job) {
                 pageCount = filtered.length;
             } catch { error = "Failed to parse results"; }
         } else if (code !== 0) {
-            error = `Crawler exited with code ${code}`;
+            error = "Crawl failed — check the live log for details";
         }
 
         db.updateJob(job.id, {
@@ -81,7 +86,7 @@ function poll() {
 }
 
 function purgeOldResults() {
-    const cutoff = Date.now() - 10 * 60 * 1000;
+    const cutoff = Date.now() - 60 * 60 * 1000; // 1 hour
     const jobs   = db.readAll();
     for (const job of jobs) {
         if (["done", "failed"].includes(job.status) && job.results !== null) {
