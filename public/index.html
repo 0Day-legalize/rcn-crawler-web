@@ -10,17 +10,18 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --green:   #39d353;
-      --green-d: #1a6b2a;
-      --green-g: rgba(57,211,83,0.06);
-      --red:     #ff4444;
-      --red-g:   rgba(255,68,68,0.08);
-      --bg:      #020c02;
-      --surface: rgba(4,16,4,0.9);
-      --border:  rgba(57,211,83,0.12);
-      --muted:   #1a3a1a;
-      --text:    #a8d8a8;
-      --dim:     #3a5a3a;
+      --green:    #4ade80;
+      --green-d:  #166534;
+      --green-glow: rgba(74,222,128,0.15);
+      --red:      #f87171;
+      --red-g:    rgba(248,113,113,0.08);
+      --bg:       #060e06;
+      --surface:  rgba(10,20,10,0.92);
+      --border:   rgba(74,222,128,0.18);
+      --muted:    #4b7a4b;
+      --text:     #d1fae5;
+      --dim:      #6b9e6b;
+      --label:    #86c986;
     }
 
     html { scrollbar-width: thin; scrollbar-color: var(--green-d) transparent; }
@@ -37,16 +38,16 @@
       overflow-x: hidden;
     }
 
-    /* scanline overlay */
+    /* subtle scanlines — reduced opacity so text stays readable */
     body::before {
       content: "";
       position: fixed; inset: 0;
       background: repeating-linear-gradient(
         0deg,
         transparent,
-        transparent 2px,
-        rgba(0,0,0,0.15) 2px,
-        rgba(0,0,0,0.15) 4px
+        transparent 3px,
+        rgba(0,0,0,0.06) 3px,
+        rgba(0,0,0,0.06) 4px
       );
       pointer-events: none; z-index: 100;
     }
@@ -56,13 +57,37 @@
       content: "";
       position: fixed; inset: 0;
       background-image:
-        linear-gradient(rgba(57,211,83,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(57,211,83,0.04) 1px, transparent 1px);
+        linear-gradient(rgba(74,222,128,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(74,222,128,0.04) 1px, transparent 1px);
       background-size: 48px 48px;
       pointer-events: none; z-index: 0;
     }
 
     * { position: relative; z-index: 1; }
+
+    /* ── Flicker animation ── */
+    @keyframes flicker {
+      0%,  18%, 22%, 25%, 53%, 57%, 100% {
+        opacity: 1;
+        text-shadow:
+          0 0 10px rgba(74,222,128,0.8),
+          0 0 30px rgba(74,222,128,0.5),
+          0 0 60px rgba(74,222,128,0.3);
+      }
+      20%, 24% {
+        opacity: 0.6;
+        text-shadow: none;
+      }
+      55% {
+        opacity: 0.85;
+        text-shadow: 0 0 10px rgba(74,222,128,0.4);
+      }
+    }
+
+    @keyframes cursor-blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
 
     /* ── Header ── */
     header {
@@ -74,40 +99,43 @@
 
     .logo-wrap {
       display: inline-flex; align-items: center; justify-content: center;
-      width: 80px; height: 80px;
-      border-radius: 12px;
-      border: 1px solid rgba(57,211,83,0.25);
-      background: rgba(57,211,83,0.04);
+      width: 84px; height: 84px; border-radius: 12px;
+      border: 1px solid rgba(74,222,128,0.3);
+      background: rgba(74,222,128,0.05);
       margin-bottom: 20px;
-      box-shadow: 0 0 40px rgba(57,211,83,0.08), inset 0 0 20px rgba(57,211,83,0.03);
-      position: relative;
+      box-shadow: 0 0 40px rgba(74,222,128,0.1), inset 0 0 20px rgba(74,222,128,0.04);
     }
-    .logo-wrap::before {
-      content: "";
-      position: absolute; inset: -1px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, rgba(57,211,83,0.2), transparent 60%);
-      pointer-events: none;
-    }
-    .logo-wrap img { height: 50px; width: 50px; object-fit: contain; filter: brightness(1.1); }
+    .logo-wrap img { height: 52px; width: 52px; object-fit: contain; }
 
     .header-tag {
       font-family: 'Share Tech Mono', monospace;
-      font-size: 10px; color: var(--green-d);
+      font-size: 10px; color: var(--muted);
       letter-spacing: 3px; text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    header h1 {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 30px; font-weight: 400;
+      color: var(--green);
+      letter-spacing: 4px; text-transform: uppercase;
+      animation: flicker 6s infinite;
       margin-bottom: 10px;
     }
-    header h1 {
-      font-size: 32px; font-weight: 700;
-      color: var(--green);
-      letter-spacing: 2px; text-transform: uppercase;
-      text-shadow: 0 0 30px rgba(57,211,83,0.4);
-      margin-bottom: 8px;
+
+    .cursor {
+      display: inline-block;
+      width: 18px; height: 3px;
+      background: var(--green);
+      vertical-align: middle;
+      margin-left: 4px;
+      animation: cursor-blink 1s step-end infinite;
     }
+
     header p {
       font-family: 'Share Tech Mono', monospace;
-      font-size: 11px; color: var(--dim);
-      letter-spacing: 1px;
+      font-size: 11px; color: var(--muted);
+      letter-spacing: 1.5px;
     }
 
     /* warning stripe */
@@ -115,9 +143,9 @@
       font-family: 'Share Tech Mono', monospace;
       font-size: 10px; color: var(--red);
       background: var(--red-g);
-      border: 1px solid rgba(255,68,68,0.15);
+      border: 1px solid rgba(248,113,113,0.2);
       border-radius: 4px;
-      padding: 7px 12px;
+      padding: 8px 14px;
       text-align: center;
       letter-spacing: 1.5px;
       margin-bottom: 20px;
@@ -128,7 +156,7 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 24px 28px;
+      padding: 26px 28px;
       margin-bottom: 16px;
       backdrop-filter: blur(4px);
     }
@@ -136,22 +164,17 @@
       font-family: 'Share Tech Mono', monospace;
       font-size: 10px; color: var(--green);
       letter-spacing: 2px; text-transform: uppercase;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
       display: flex; align-items: center; gap: 10px;
     }
-    .card-title::before {
-      content: "//"; color: var(--green-d); font-size: 12px;
-    }
-    .card-title::after {
-      content: ""; flex: 1; height: 1px;
-      background: linear-gradient(90deg, var(--border), transparent);
-    }
+    .card-title::before { content: "//"; color: var(--green-d); font-size: 13px; }
+    .card-title::after  { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
 
     /* ── Inputs ── */
     .field { margin-bottom: 20px; }
     label {
       font-family: 'Share Tech Mono', monospace;
-      font-size: 10px; color: var(--dim);
+      font-size: 10px; color: var(--label);
       display: block; margin-bottom: 8px;
       letter-spacing: 1px; text-transform: uppercase;
     }
@@ -159,11 +182,11 @@
 
     input[type="text"] {
       width: 100%;
-      background: rgba(0,0,0,0.6);
-      border: 1px solid rgba(57,211,83,0.15);
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(74,222,128,0.2);
       border-radius: 4px;
       padding: 11px 14px;
-      color: var(--green);
+      color: var(--text);
       font-size: 13px;
       font-family: 'Share Tech Mono', monospace;
       outline: none;
@@ -171,8 +194,8 @@
       caret-color: var(--green);
     }
     input[type="text"]:focus {
-      border-color: rgba(57,211,83,0.5);
-      box-shadow: 0 0 0 3px rgba(57,211,83,0.05), 0 0 20px rgba(57,211,83,0.06);
+      border-color: rgba(74,222,128,0.55);
+      box-shadow: 0 0 0 3px rgba(74,222,128,0.07), 0 0 20px rgba(74,222,128,0.07);
     }
     input[type="text"]::placeholder { color: var(--muted); }
 
@@ -182,19 +205,18 @@
     .toggle input { opacity: 0; width: 0; height: 0; }
     .slider {
       position: absolute; inset: 0;
-      background: rgba(0,0,0,0.5); border: 1px solid var(--muted);
+      background: rgba(0,0,0,0.4); border: 1px solid rgba(74,222,128,0.2);
       border-radius: 22px; cursor: pointer; transition: all 0.2s;
     }
     .slider::before {
       content: ""; position: absolute;
       width: 14px; height: 14px; left: 3px; top: 3px;
-      background: var(--dim); border-radius: 50%;
+      background: var(--muted); border-radius: 50%;
       transition: transform 0.2s, background 0.2s;
     }
     .toggle input:checked + .slider {
-      background: rgba(57,211,83,0.1);
-      border-color: rgba(57,211,83,0.4);
-      box-shadow: 0 0 10px rgba(57,211,83,0.1);
+      background: rgba(74,222,128,0.1); border-color: rgba(74,222,128,0.5);
+      box-shadow: 0 0 10px rgba(74,222,128,0.15);
     }
     .toggle input:checked + .slider::before { transform: translateX(22px); background: var(--green); }
     .toggle-label {
@@ -204,16 +226,16 @@
 
     /* ── TOS ── */
     .tos-box {
-      background: rgba(0,0,0,0.5);
-      border: 1px solid rgba(255,68,68,0.1);
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(248,113,113,0.12);
       border-radius: 4px; padding: 14px 16px;
       max-height: 190px; overflow-y: auto;
       font-family: 'Share Tech Mono', monospace;
-      font-size: 10px; line-height: 1.9; color: var(--muted);
+      font-size: 10px; line-height: 2; color: var(--dim);
       margin-bottom: 16px;
       scrollbar-width: thin; scrollbar-color: var(--green-d) transparent;
     }
-    .tos-box h3 { color: var(--dim); font-size: 10px; margin-bottom: 8px; letter-spacing: 2px; text-transform: uppercase; }
+    .tos-box h3 { color: var(--label); font-size: 10px; margin-bottom: 8px; letter-spacing: 2px; text-transform: uppercase; }
     .tos-box h4 { color: var(--muted); font-size: 10px; margin: 10px 0 4px; letter-spacing: 1px; }
     .tos-box ul { padding-left: 12px; list-style: none; }
     .tos-box li::before { content: "> "; color: var(--green-d); }
@@ -232,31 +254,28 @@
       display: inline-flex; align-items: center; gap: 8px;
       padding: 11px 28px; border-radius: 4px;
       font-family: 'Share Tech Mono', monospace;
-      font-size: 13px; font-weight: 400;
-      letter-spacing: 2px; text-transform: uppercase;
-      cursor: pointer; border: none;
-      transition: all 0.2s;
+      font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
+      cursor: pointer; border: none; transition: all 0.2s;
     }
     .btn-primary {
-      background: rgba(57,211,83,0.08);
-      border: 1px solid rgba(57,211,83,0.4);
+      background: rgba(74,222,128,0.08);
+      border: 1px solid rgba(74,222,128,0.45);
       color: var(--green);
     }
     .btn-primary:hover:not(:disabled) {
-      background: rgba(57,211,83,0.14);
+      background: rgba(74,222,128,0.14);
       border-color: var(--green);
-      box-shadow: 0 0 24px rgba(57,211,83,0.2), inset 0 0 12px rgba(57,211,83,0.04);
+      box-shadow: 0 0 24px rgba(74,222,128,0.2), inset 0 0 12px rgba(74,222,128,0.04);
     }
-    .btn:disabled { opacity: 0.2; cursor: default; }
+    .btn:disabled { opacity: 0.25; cursor: default; }
 
     #error-msg {
       display: none; margin-top: 14px;
       font-family: 'Share Tech Mono', monospace;
       font-size: 11px; color: var(--red);
       background: var(--red-g);
-      border: 1px solid rgba(255,68,68,0.2);
-      border-radius: 4px; padding: 10px 14px;
-      letter-spacing: 0.5px;
+      border: 1px solid rgba(248,113,113,0.2);
+      border-radius: 4px; padding: 10px 14px; letter-spacing: 0.5px;
     }
     #error-msg::before { content: "[ERR] "; }
 
@@ -266,14 +285,11 @@
     .step-num {
       font-family: 'Share Tech Mono', monospace;
       width: 28px; height: 28px; border-radius: 4px; flex-shrink: 0;
-      background: rgba(57,211,83,0.05);
-      border: 1px solid rgba(57,211,83,0.2);
+      background: rgba(74,222,128,0.05); border: 1px solid rgba(74,222,128,0.25);
       color: var(--green); font-size: 12px;
       display: flex; align-items: center; justify-content: center;
     }
-    .step-text {
-      font-size: 13px; color: var(--dim); line-height: 1.7; padding-top: 4px;
-    }
+    .step-text { font-size: 14px; color: var(--dim); line-height: 1.6; padding-top: 3px; }
     .step-text strong { color: var(--text); }
 
     /* ── Footer ── */
@@ -292,12 +308,12 @@
   <div class="logo-wrap">
     <img src="/logo.png" alt="RCN">
   </div>
-  <div class="header-tag">v1.0 · research tool · tor-routed</div>
-  <h1>RCN WebCrawler</h1>
+  <div class="header-tag">v1.0 &nbsp;·&nbsp; tor-routed &nbsp;·&nbsp; research tool</div>
+  <h1>RCN WebCrawler<span class="cursor"></span></h1>
   <p>// dark web &amp; clearnet intelligence platform</p>
 </header>
 
-<div class="warn-stripe">&#9888; FOR AUTHORIZED SECURITY RESEARCH AND OSINT USE ONLY &#9888;</div>
+<div class="warn-stripe">&#9888;&nbsp; FOR AUTHORIZED SECURITY RESEARCH AND OSINT USE ONLY &nbsp;&#9888;</div>
 
 <div class="card">
   <div class="card-title">Initialize Crawl</div>
@@ -357,7 +373,7 @@
     I have read and agree to the Terms of Service
   </label>
 
-  <button class="btn btn-primary" id="btn-submit" disabled>[ EXECUTE ]</button>
+  <button class="btn btn-primary" id="btn-submit" disabled>[ execute ]</button>
   <div id="error-msg"></div>
 </div>
 
@@ -406,7 +422,7 @@ submitBtn.addEventListener("click", async () => {
   if (!url) { showError("Target URL is required."); return; }
 
   submitBtn.disabled = true;
-  submitBtn.textContent = "[ INITIALIZING... ]";
+  submitBtn.textContent = "[ initializing... ]";
 
   try {
     const res = await fetch("/api/jobs", {
@@ -421,7 +437,7 @@ submitBtn.addEventListener("click", async () => {
       showError(data.error ?? "Failed to submit job.");
       if (data.jobId) window.location.href = `/job.html?id=${data.jobId}`;
       submitBtn.disabled = false;
-      submitBtn.textContent = "[ EXECUTE ]";
+      submitBtn.textContent = "[ execute ]";
       return;
     }
 
@@ -429,7 +445,7 @@ submitBtn.addEventListener("click", async () => {
   } catch (err) {
     showError(`Connection failed: ${err.message}`);
     submitBtn.disabled = false;
-    submitBtn.textContent = "[ EXECUTE ]";
+    submitBtn.textContent = "[ execute ]";
   }
 });
 </script>

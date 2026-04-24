@@ -10,17 +10,17 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --green:   #39d353;
-      --green-d: #1a6b2a;
-      --green-g: rgba(57,211,83,0.06);
-      --red:     #ff4444;
-      --red-g:   rgba(255,68,68,0.08);
-      --bg:      #020c02;
-      --surface: rgba(4,16,4,0.9);
-      --border:  rgba(57,211,83,0.12);
-      --muted:   #1a3a1a;
-      --text:    #a8d8a8;
-      --dim:     #3a5a3a;
+      --green:    #4ade80;
+      --green-d:  #166534;
+      --red:      #f87171;
+      --red-g:    rgba(248,113,113,0.08);
+      --bg:       #060e06;
+      --surface:  rgba(10,20,10,0.92);
+      --border:   rgba(74,222,128,0.18);
+      --muted:    #4b7a4b;
+      --text:     #d1fae5;
+      --dim:      #6b9e6b;
+      --label:    #86c986;
     }
 
     html { scrollbar-width: thin; scrollbar-color: var(--green-d) transparent; }
@@ -41,8 +41,8 @@
       content: "";
       position: fixed; inset: 0;
       background: repeating-linear-gradient(
-        0deg, transparent, transparent 2px,
-        rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px
+        0deg, transparent, transparent 3px,
+        rgba(0,0,0,0.06) 3px, rgba(0,0,0,0.06) 4px
       );
       pointer-events: none; z-index: 100;
     }
@@ -50,10 +50,15 @@
       content: "";
       position: fixed; inset: 0;
       background-image:
-        linear-gradient(rgba(57,211,83,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(57,211,83,0.04) 1px, transparent 1px);
+        linear-gradient(rgba(74,222,128,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(74,222,128,0.04) 1px, transparent 1px);
       background-size: 48px 48px;
       pointer-events: none; z-index: 0;
+    }
+
+    @keyframes cursor-blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
     }
     * { position: relative; z-index: 1; }
 
@@ -66,6 +71,12 @@
     }
     .header-left { display: flex; align-items: center; gap: 14px; }
     .header-left img { height: 28px; width: 28px; object-fit: contain; }
+    .cursor {
+      display: inline-block; width: 10px; height: 2px;
+      background: var(--green); vertical-align: middle; margin-left: 4px;
+      animation: cursor-blink 1s step-end infinite;
+    }
+
     header h1 {
       font-family: 'Share Tech Mono', monospace;
       font-size: 16px; color: var(--green);
@@ -97,7 +108,7 @@
       display: flex; align-items: center; gap: 10px;
     }
     .card-title::before { content: "//"; color: var(--green-d); font-size: 12px; }
-    .card-title::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+    .card-title::after  { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
 
     /* ── Badge ── */
     .status-row { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
@@ -108,16 +119,16 @@
       display: inline-flex; align-items: center; gap: 8px;
       letter-spacing: 2px; text-transform: uppercase;
     }
-    .badge-pending { background: rgba(245,158,11,0.08);  color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); }
-    .badge-running { background: rgba(57,211,83,0.08);   color: var(--green); border: 1px solid rgba(57,211,83,0.25); }
-    .badge-done    { background: rgba(88,166,255,0.08);  color: #60a5fa; border: 1px solid rgba(88,166,255,0.2); }
-    .badge-failed  { background: var(--red-g);            color: var(--red);  border: 1px solid rgba(255,68,68,0.2); }
+    .badge-pending { background: rgba(245,158,11,0.08);   color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
+    .badge-running { background: rgba(74,222,128,0.08);   color: var(--green); border: 1px solid rgba(74,222,128,0.3); }
+    .badge-done    { background: rgba(96,165,250,0.08);   color: #93c5fd; border: 1px solid rgba(96,165,250,0.25); }
+    .badge-failed  { background: var(--red-g);             color: var(--red);  border: 1px solid rgba(248,113,113,0.25); }
 
     .dot-live {
-      width: 6px; height: 6px; border-radius: 50%;
+      width: 7px; height: 7px; border-radius: 50%;
       background: var(--green);
       animation: blink 1s step-end infinite;
-      box-shadow: 0 0 6px var(--green);
+      box-shadow: 0 0 8px var(--green);
     }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
@@ -126,9 +137,13 @@
       font-size: 11px; color: var(--dim); letter-spacing: 0.5px;
     }
 
+    .status-text {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px; color: var(--dim); letter-spacing: 0.5px;
+    }
     .meta {
       font-family: 'Share Tech Mono', monospace;
-      font-size: 10px; color: var(--muted); line-height: 2; letter-spacing: 0.3px;
+      font-size: 10px; color: var(--muted); line-height: 2.2; letter-spacing: 0.3px;
     }
     .meta span { color: var(--dim); }
 
@@ -166,7 +181,7 @@
     }
     .result-url {
       font-family: 'Share Tech Mono', monospace;
-      font-size: 10px; color: var(--dim);
+      font-size: 10px; color: var(--muted);
       word-break: break-all; margin-bottom: 10px;
     }
     .result-meta { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -175,10 +190,10 @@
       font-size: 9px; padding: 2px 10px; border-radius: 3px;
       font-weight: 400; letter-spacing: 1px; text-transform: uppercase;
     }
-    .rb-onion { background: rgba(255,68,68,0.08);   color: #ff6b6b; border: 1px solid rgba(255,68,68,0.2); }
-    .rb-clear { background: rgba(88,166,255,0.08);  color: #60a5fa; border: 1px solid rgba(88,166,255,0.2); }
-    .rb-term  { background: rgba(57,211,83,0.08);   color: var(--green); border: 1px solid rgba(57,211,83,0.2); }
-    .rb-dl    { background: rgba(245,158,11,0.08);  color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); }
+    .rb-onion { background: rgba(248,113,113,0.1);  color: #fca5a5; border: 1px solid rgba(248,113,113,0.25); }
+    .rb-clear { background: rgba(96,165,250,0.1);   color: #93c5fd; border: 1px solid rgba(96,165,250,0.25); }
+    .rb-term  { background: rgba(74,222,128,0.1);   color: var(--green); border: 1px solid rgba(74,222,128,0.25); }
+    .rb-dl    { background: rgba(251,191,36,0.1);   color: #fde68a; border: 1px solid rgba(251,191,36,0.25); }
 
     /* ── Buttons ── */
     .export-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
@@ -225,7 +240,7 @@
 <header>
   <div class="header-left">
     <img src="/logo.png" alt="RCN">
-    <h1>// Job Monitor</h1>
+    <h1>// Job Monitor<span class="cursor"></span></h1>
   </div>
   <a href="/">&#8592; New crawl</a>
 </header>
