@@ -5,15 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RCN — Job Status</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap');
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root {
+      --green:   #39d353;
+      --green-d: #1a6b2a;
+      --green-g: rgba(57,211,83,0.06);
+      --red:     #ff4444;
+      --red-g:   rgba(255,68,68,0.08);
+      --bg:      #020c02;
+      --surface: rgba(4,16,4,0.9);
+      --border:  rgba(57,211,83,0.12);
+      --muted:   #1a3a1a;
+      --text:    #a8d8a8;
+      --dim:     #3a5a3a;
+    }
+
+    html { scrollbar-width: thin; scrollbar-color: var(--green-d) transparent; }
+
     body {
-      background: #04080f;
-      color: #c9d1d9;
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Rajdhani', 'Segoe UI', system-ui, sans-serif;
       min-height: 100vh;
-      padding: 40px 24px 64px;
-      max-width: 760px;
+      padding: 36px 24px 80px;
+      max-width: 740px;
       margin: 0 auto;
       position: relative;
       overflow-x: hidden;
@@ -22,17 +40,19 @@
     body::before {
       content: "";
       position: fixed; inset: 0;
-      background-image:
-        linear-gradient(rgba(0,212,170,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,212,170,0.03) 1px, transparent 1px);
-      background-size: 40px 40px;
-      pointer-events: none; z-index: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px
+      );
+      pointer-events: none; z-index: 100;
     }
     body::after {
       content: "";
-      position: fixed; top: -200px; left: 50%; transform: translateX(-50%);
-      width: 600px; height: 400px;
-      background: radial-gradient(ellipse, rgba(0,212,170,0.06) 0%, transparent 70%);
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(57,211,83,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(57,211,83,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
       pointer-events: none; z-index: 0;
     }
     * { position: relative; z-index: 1; }
@@ -40,128 +60,155 @@
     /* ── Header ── */
     header {
       display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 32px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      margin-bottom: 28px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border);
     }
-    .header-left { display: flex; align-items: center; gap: 12px; }
-    .header-left img { height: 30px; width: 30px; object-fit: contain; }
-    header h1 { font-size: 18px; font-weight: 700; color: #e6edf3; }
+    .header-left { display: flex; align-items: center; gap: 14px; }
+    .header-left img { height: 28px; width: 28px; object-fit: contain; }
+    header h1 {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 16px; color: var(--green);
+      letter-spacing: 2px; text-transform: uppercase;
+    }
     header a {
-      font-size: 12px; color: #374151; text-decoration: none;
-      border: 1px solid rgba(255,255,255,0.05);
-      padding: 6px 12px; border-radius: 6px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px; color: var(--dim);
+      text-decoration: none; letter-spacing: 1px;
+      border: 1px solid var(--border);
+      padding: 6px 14px; border-radius: 4px;
       transition: all 0.15s;
     }
-    header a:hover { color: #6b7280; border-color: rgba(255,255,255,0.1); }
+    header a:hover { color: var(--text); border-color: rgba(57,211,83,0.3); }
 
     /* ── Cards ── */
     .card {
-      background: rgba(13,18,26,0.85);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 14px; padding: 24px;
-      margin-bottom: 16px;
-      backdrop-filter: blur(8px);
-      transition: border-color 0.2s;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px; padding: 22px 28px;
+      margin-bottom: 14px;
+      backdrop-filter: blur(4px);
     }
     .card-title {
-      font-size: 11px; font-weight: 600; color: #00d4aa;
-      text-transform: uppercase; letter-spacing: 1px;
-      margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px; color: var(--green);
+      letter-spacing: 2px; text-transform: uppercase;
+      margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
     }
-    .card-title::before {
-      content: ""; display: inline-block; width: 3px; height: 12px;
-      background: #00d4aa; border-radius: 2px;
-    }
+    .card-title::before { content: "//"; color: var(--green-d); font-size: 12px; }
+    .card-title::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
 
-    /* ── Status ── */
-    .status-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    /* ── Badge ── */
+    .status-row { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
     .badge {
-      font-size: 11px; font-weight: 600; padding: 4px 12px;
-      border-radius: 20px; display: inline-flex; align-items: center; gap: 7px;
-      text-transform: uppercase; letter-spacing: 0.5px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px; font-weight: 400;
+      padding: 4px 14px; border-radius: 3px;
+      display: inline-flex; align-items: center; gap: 8px;
+      letter-spacing: 2px; text-transform: uppercase;
     }
-    .badge-pending { background: rgba(245,158,11,0.1);  color: #f59e0b; border: 1px solid rgba(245,158,11,0.25); }
-    .badge-running { background: rgba(0,212,170,0.1);   color: #00d4aa; border: 1px solid rgba(0,212,170,0.25); }
-    .badge-done    { background: rgba(88,166,255,0.1);  color: #58a6ff; border: 1px solid rgba(88,166,255,0.25); }
-    .badge-failed  { background: rgba(248,113,113,0.1); color: #f87171; border: 1px solid rgba(248,113,113,0.25); }
+    .badge-pending { background: rgba(245,158,11,0.08);  color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); }
+    .badge-running { background: rgba(57,211,83,0.08);   color: var(--green); border: 1px solid rgba(57,211,83,0.25); }
+    .badge-done    { background: rgba(88,166,255,0.08);  color: #60a5fa; border: 1px solid rgba(88,166,255,0.2); }
+    .badge-failed  { background: var(--red-g);            color: var(--red);  border: 1px solid rgba(255,68,68,0.2); }
 
     .dot-live {
-      width: 7px; height: 7px; border-radius: 50%; background: #00d4aa;
-      animation: pulse 1.4s infinite;
-      box-shadow: 0 0 6px #00d4aa;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green);
+      animation: blink 1s step-end infinite;
+      box-shadow: 0 0 6px var(--green);
     }
-    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.85)} }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-    .status-text { font-size: 12px; color: #4b5563; }
+    .status-text {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px; color: var(--dim); letter-spacing: 0.5px;
+    }
 
-    .meta { font-size: 11px; color: #374151; line-height: 2; }
-    .meta span { color: #4b5563; }
+    .meta {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px; color: var(--muted); line-height: 2; letter-spacing: 0.3px;
+    }
+    .meta span { color: var(--dim); }
 
     /* ── Log ── */
     #log {
-      background: rgba(4,8,15,0.8);
-      border: 1px solid rgba(255,255,255,0.05);
-      border-radius: 10px;
+      background: rgba(0,0,0,0.7);
+      border: 1px solid rgba(57,211,83,0.08);
+      border-radius: 4px;
       padding: 14px 16px;
-      font-size: 11px; line-height: 1.8; color: #374151;
-      height: 220px; overflow-y: auto;
-      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 11px; line-height: 1.8; color: var(--muted);
+      height: 230px; overflow-y: auto;
+      font-family: 'Share Tech Mono', monospace;
       white-space: pre-wrap; word-break: break-all;
-      scrollbar-width: thin; scrollbar-color: #1f2937 transparent;
+      scrollbar-width: thin; scrollbar-color: var(--green-d) transparent;
+    }
+    #log::before {
+      content: "root@rcn:~# tail -f crawl.log\A";
+      color: var(--green-d); display: block; margin-bottom: 8px;
+      white-space: pre;
     }
 
     /* ── Results ── */
     .result-item {
-      border: 1px solid rgba(255,255,255,0.05);
-      border-radius: 10px; padding: 14px 16px;
+      border: 1px solid rgba(57,211,83,0.08);
+      border-radius: 6px; padding: 14px 16px;
       margin-bottom: 10px;
-      background: rgba(4,8,15,0.6);
+      background: rgba(0,0,0,0.4);
       transition: border-color 0.15s;
     }
-    .result-item:hover { border-color: rgba(0,212,170,0.15); }
+    .result-item:hover { border-color: rgba(57,211,83,0.2); }
     .result-title {
-      font-size: 13px; font-weight: 500; color: #e6edf3;
+      font-size: 14px; font-weight: 600; color: var(--text);
       margin-bottom: 5px; overflow: hidden;
       text-overflow: ellipsis; white-space: nowrap;
     }
     .result-url {
-      font-size: 10px; color: #374151;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px; color: var(--dim);
       word-break: break-all; margin-bottom: 10px;
-      font-family: 'Consolas', monospace;
     }
     .result-meta { display: flex; gap: 6px; flex-wrap: wrap; }
     .rbadge {
-      font-size: 10px; padding: 2px 9px; border-radius: 10px;
-      font-weight: 600; letter-spacing: 0.3px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px; padding: 2px 10px; border-radius: 3px;
+      font-weight: 400; letter-spacing: 1px; text-transform: uppercase;
     }
-    .rb-onion { background: rgba(168,85,247,0.12); color: #a855f7; border: 1px solid rgba(168,85,247,0.25); }
-    .rb-clear { background: rgba(59,130,246,0.12);  color: #60a5fa; border: 1px solid rgba(59,130,246,0.25); }
-    .rb-term  { background: rgba(0,212,170,0.1);    color: #00d4aa; border: 1px solid rgba(0,212,170,0.25); }
-    .rb-dl    { background: rgba(245,158,11,0.1);   color: #f59e0b; border: 1px solid rgba(245,158,11,0.25); }
+    .rb-onion { background: rgba(255,68,68,0.08);   color: #ff6b6b; border: 1px solid rgba(255,68,68,0.2); }
+    .rb-clear { background: rgba(88,166,255,0.08);  color: #60a5fa; border: 1px solid rgba(88,166,255,0.2); }
+    .rb-term  { background: rgba(57,211,83,0.08);   color: var(--green); border: 1px solid rgba(57,211,83,0.2); }
+    .rb-dl    { background: rgba(245,158,11,0.08);  color: #f59e0b; border: 1px solid rgba(245,158,11,0.2); }
 
-    /* ── Export buttons ── */
+    /* ── Buttons ── */
     .export-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
     .btn {
       display: inline-flex; align-items: center; gap: 8px;
-      padding: 8px 16px; border-radius: 8px; font-size: 12px;
-      font-weight: 600; cursor: pointer; border: none; text-decoration: none;
-      transition: all 0.15s; letter-spacing: 0.3px;
+      padding: 8px 18px; border-radius: 4px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+      cursor: pointer; border: none; text-decoration: none;
+      transition: all 0.15s;
     }
-    .btn-blue {
-      background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.25); color: #58a6ff;
-    }
-    .btn-blue:hover { background: rgba(88,166,255,0.15); box-shadow: 0 0 16px rgba(88,166,255,0.1); }
-    .btn-amber {
-      background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); color: #f59e0b;
-    }
-    .btn-amber:hover { background: rgba(245,158,11,0.15); }
+    .btn-blue  { background: rgba(88,166,255,0.06); border: 1px solid rgba(88,166,255,0.2); color: #60a5fa; }
+    .btn-blue:hover  { background: rgba(88,166,255,0.12); box-shadow: 0 0 16px rgba(88,166,255,0.1); }
+    .btn-amber { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.2); color: #f59e0b; }
+    .btn-amber:hover { background: rgba(245,158,11,0.12); }
 
-    #empty { font-size: 13px; color: #374151; padding: 28px 0; text-align: center; }
+    #empty {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px; color: var(--muted);
+      padding: 28px 0; text-align: center; letter-spacing: 1px;
+    }
+    #empty::before { content: "// "; color: var(--green-d); }
 
     /* ── Footer ── */
-    footer { text-align: center; margin-top: 48px; font-size: 11px; color: #1f2937; }
-    footer a { color: #374151; text-decoration: none; }
+    footer {
+      text-align: center; margin-top: 48px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px; color: var(--muted); letter-spacing: 1px;
+    }
+    footer a { color: var(--dim); text-decoration: none; }
 
     @media print {
       body { background:#fff; color:#000; }
@@ -178,7 +225,7 @@
 <header>
   <div class="header-left">
     <img src="/logo.png" alt="RCN">
-    <h1>Job Status</h1>
+    <h1>// Job Monitor</h1>
   </div>
   <a href="/">&#8592; New crawl</a>
 </header>
@@ -186,28 +233,28 @@
 <div class="card">
   <div class="status-row">
     <span id="badge" class="badge badge-pending">pending</span>
-    <span id="status-text" class="status-text">Waiting in queue…</span>
+    <span id="status-text" class="status-text">waiting in queue...</span>
   </div>
   <div class="meta" id="meta"></div>
 </div>
 
 <div class="card">
-  <div class="card-title">Live log</div>
+  <div class="card-title">Live Output</div>
   <div id="log">Waiting for job to start…</div>
 </div>
 
 <div class="card">
-  <div class="card-title">Results</div>
+  <div class="card-title">Extracted Results</div>
   <div class="export-row" id="export-row" style="display:none">
-    <a id="btn-download" class="btn btn-blue" href="#">&#8659; Download JSON.gz</a>
-    <button class="btn btn-amber" onclick="window.print()">&#128438; Export PDF</button>
+    <a id="btn-download" class="btn btn-blue" href="#">[ download json.gz ]</a>
+    <button class="btn btn-amber" onclick="window.print()">[ export pdf ]</button>
   </div>
   <div id="results-list"></div>
-  <div id="empty">Results will appear here when the crawl finishes.</div>
+  <div id="empty">results will appear here when the crawl finishes</div>
 </div>
 
 <footer>
-  Built by <a href="https://github.com/0Day-legalize">RCN</a> &nbsp;&middot;&nbsp; For research use only
+  RCN &nbsp;&middot;&nbsp; for research use only
 </footer>
 
 <script>
@@ -228,10 +275,10 @@ const exportRow  = document.getElementById("export-row");
 document.getElementById("btn-download").href = `/api/jobs/${jobId}/download`;
 
 const BADGE_MAP = {
-  pending: ["badge-pending", "Waiting in queue…"],
-  running: ["badge-running", "Crawl in progress…"],
-  done:    ["badge-done",    "Finished"],
-  failed:  ["badge-failed",  "Failed"],
+  pending: ["badge-pending", "waiting in queue..."],
+  running: ["badge-running", "crawl in progress..."],
+  done:    ["badge-done",    "operation complete"],
+  failed:  ["badge-failed",  "operation failed"],
 };
 
 function esc(s) {
@@ -239,11 +286,11 @@ function esc(s) {
 }
 
 function colorLog(line) {
-  if (/error|fail/i.test(line))                          return `<span style="color:#f87171">${esc(line)}</span>`;
-  if (/warn/i.test(line))                                return `<span style="color:#f59e0b">${esc(line)}</span>`;
-  if (/✓|done|success|graph|circuit/i.test(line))        return `<span style="color:#00d4aa">${esc(line)}</span>`;
-  if (/\[server\]/i.test(line))                          return `<span style="color:#1f2937">${esc(line)}</span>`;
-  return `<span style="color:#4b5563">${esc(line)}</span>`;
+  if (/error|fail/i.test(line))                    return `<span style="color:#ff4444">${esc(line)}</span>`;
+  if (/warn/i.test(line))                          return `<span style="color:#f59e0b">${esc(line)}</span>`;
+  if (/✓|done|success|graph|circuit/i.test(line))  return `<span style="color:#39d353">${esc(line)}</span>`;
+  if (/\[server\]/i.test(line))                    return `<span style="color:#1a3a1a">${esc(line)}</span>`;
+  return `<span style="color:#3a5a3a">${esc(line)}</span>`;
 }
 
 function renderPage(p) {
@@ -257,7 +304,7 @@ function renderPage(p) {
     <div class="result-meta">
       ${isOnion ? '<span class="rbadge rb-onion">.onion</span>' : '<span class="rbadge rb-clear">clearnet</span>'}
       ${terms.map(t => `<span class="rbadge rb-term">${esc(t)}</span>`).join("")}
-      ${dls.length ? `<span class="rbadge rb-dl">&#8659; ${dls.length} downloads</span>` : ""}
+      ${dls.length ? `<span class="rbadge rb-dl">&#8659; ${dls.length} files</span>` : ""}
     </div>
   </div>`;
 }
@@ -269,17 +316,17 @@ async function poll() {
     const [cls, text] = BADGE_MAP[job.status] ?? ["badge-pending", job.status];
     badgeEl.className = `badge ${cls}`;
     badgeEl.innerHTML = job.status === "running"
-      ? `<div class="dot-live"></div> running`
+      ? `<div class="dot-live"></div>${job.status}`
       : job.status;
     statusText.textContent = text;
 
     metaEl.innerHTML = [
-      `<span>URL:</span> ${esc(job.url)}`,
-      job.search_terms ? `<span>Terms:</span> ${esc(job.search_terms)}` : "",
-      job.started_at   ? `<span>Started:</span> ${new Date(job.started_at).toLocaleTimeString()}` : "",
-      job.finished_at  ? `<span>Finished:</span> ${new Date(job.finished_at).toLocaleTimeString()}` : "",
-      job.page_count   ? `<span>Pages found:</span> ${job.page_count}` : "",
-      job.error        ? `<span style="color:#f87171">Error:</span> ${esc(job.error)}` : "",
+      `<span>target:</span> ${esc(job.url)}`,
+      job.search_terms ? `<span>terms:</span> ${esc(job.search_terms)}` : "",
+      job.started_at   ? `<span>started:</span> ${new Date(job.started_at).toLocaleTimeString()}` : "",
+      job.finished_at  ? `<span>finished:</span> ${new Date(job.finished_at).toLocaleTimeString()}` : "",
+      job.page_count   ? `<span>pages:</span> ${job.page_count}` : "",
+      job.error        ? `<span style="color:#ff4444">error:</span> ${esc(job.error)}` : "",
     ].filter(Boolean).join(" &nbsp;&middot;&nbsp; ");
 
     const log     = job.log ?? "";
@@ -303,7 +350,7 @@ async function poll() {
           exportRow.style.display = "flex";
           resultsList.innerHTML = pages.map(renderPage).join("");
         } else {
-          emptyEl.textContent = "No matching pages found.";
+          emptyEl.textContent = "no matching pages found";
         }
       }
     }
