@@ -5,31 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RCN WebCrawler</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;500;600&display=swap');
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --green:    #4ade80;
-      --green-d:  #166534;
-      --red:      #f87171;
-      --red-g:    rgba(248,113,113,0.07);
-      --bg:       #030303;
-      --surface:  #000000;
-      --border:   rgba(255,255,255,0.05);
-      --border-h: rgba(74,222,128,0.2);
-      --muted:    #4b7a4b;
-      --text:     #d1fae5;
-      --dim:      #6b9e6b;
-      --label:    #86c986;
+      --green:      #4ade80;
+      --green-dim:  #166534;
+      --green-glow: rgba(74,222,128,0.12);
+      --red:        #fca5a5;
+      --red-border: rgba(252,165,165,0.2);
+      --bg:         #0a0a0a;
+      --surface:    #111111;
+      --border:     rgba(255,255,255,0.07);
+      --border-h:   rgba(74,222,128,0.25);
+      --text:       #e2e8f0;
+      --text-sec:   #94a3b8;
+      --text-dim:   #64748b;
+      --label:      #cbd5e1;
     }
 
-    html { scrollbar-width: thin; scrollbar-color: var(--green-d) transparent; }
+    html { scrollbar-width: thin; scrollbar-color: #1e3a2a transparent; }
 
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'Rajdhani', 'Segoe UI', system-ui, sans-serif;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
       min-height: 100vh;
       padding: 48px 24px 80px;
       max-width: 740px;
@@ -38,16 +41,13 @@
       overflow-x: hidden;
     }
 
-    /* subtle scanlines — reduced opacity so text stays readable */
+    /* subtle scanlines */
     body::before {
       content: "";
       position: fixed; inset: 0;
       background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 3px,
-        rgba(0,0,0,0.06) 3px,
-        rgba(0,0,0,0.06) 4px
+        0deg, transparent, transparent 3px,
+        rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 4px
       );
       pointer-events: none; z-index: 100;
     }
@@ -57,255 +57,209 @@
       content: "";
       position: fixed; inset: 0;
       background-image:
-        linear-gradient(rgba(74,222,128,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(74,222,128,0.04) 1px, transparent 1px);
+        linear-gradient(rgba(74,222,128,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(74,222,128,0.03) 1px, transparent 1px);
       background-size: 48px 48px;
       pointer-events: none; z-index: 0;
     }
 
     * { position: relative; z-index: 1; }
 
-    /* ── Flicker animation ── */
+    /* ── Animations ── */
     @keyframes flicker {
       0%,  18%, 22%, 25%, 53%, 57%, 100% {
         opacity: 1;
-        text-shadow:
-          0 0 10px rgba(74,222,128,0.8),
-          0 0 30px rgba(74,222,128,0.5),
-          0 0 60px rgba(74,222,128,0.3);
+        text-shadow: 0 0 8px rgba(74,222,128,0.7), 0 0 24px rgba(74,222,128,0.4);
       }
-      20%, 24% {
-        opacity: 0.6;
-        text-shadow: none;
-      }
-      55% {
-        opacity: 0.85;
-        text-shadow: 0 0 10px rgba(74,222,128,0.4);
-      }
+      20%, 24% { opacity: 0.65; text-shadow: none; }
+      55%       { opacity: 0.88; text-shadow: 0 0 8px rgba(74,222,128,0.3); }
     }
-
-    @keyframes cursor-blink {
+    @keyframes blink {
       0%, 100% { opacity: 1; }
       50%       { opacity: 0; }
     }
 
     /* ── Header ── */
-    header {
-      text-align: center;
-      margin-bottom: 52px;
-      padding-bottom: 32px;
-      border-bottom: 1px solid var(--border);
-    }
+    header { text-align: center; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
 
     .logo-wrap {
       display: inline-flex; align-items: center; justify-content: center;
-      width: 84px; height: 84px; border-radius: 12px;
-      border: 1px solid rgba(74,222,128,0.3);
-      background: rgba(74,222,128,0.05);
-      margin-bottom: 20px;
-      box-shadow: 0 0 40px rgba(74,222,128,0.1), inset 0 0 20px rgba(74,222,128,0.04);
+      width: 84px; height: 84px; border-radius: 14px;
+      border: 1px solid rgba(74,222,128,0.25);
+      background: rgba(74,222,128,0.04);
+      margin-bottom: 22px;
+      box-shadow: 0 0 40px rgba(74,222,128,0.08);
     }
     .logo-wrap img { height: 52px; width: 52px; object-fit: contain; }
 
     .header-tag {
       font-family: 'Share Tech Mono', monospace;
-      font-size: 10px; color: var(--muted);
-      letter-spacing: 3px; text-transform: uppercase;
-      margin-bottom: 12px;
+      font-size: 11px; color: var(--text-dim);
+      letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px;
     }
 
     header h1 {
       font-family: 'Share Tech Mono', monospace;
-      font-size: 30px; font-weight: 400;
-      color: var(--green);
+      font-size: 28px; color: var(--green);
       letter-spacing: 4px; text-transform: uppercase;
-      animation: flicker 6s infinite;
-      margin-bottom: 10px;
+      animation: flicker 6s infinite; margin-bottom: 10px;
     }
 
     .cursor {
-      display: inline-block;
-      width: 18px; height: 3px;
-      background: var(--green);
-      vertical-align: middle;
-      margin-left: 4px;
-      animation: cursor-blink 1s step-end infinite;
+      display: inline-block; width: 18px; height: 3px;
+      background: var(--green); vertical-align: middle; margin-left: 4px;
+      animation: blink 1s step-end infinite;
     }
 
-    header p {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px; color: var(--muted);
-      letter-spacing: 1.5px;
-    }
+    header p { font-size: 13px; color: var(--text-dim); letter-spacing: 0.5px; }
 
-    /* warning stripe */
+    /* ── Warning stripe ── */
     .warn-stripe {
       font-family: 'Share Tech Mono', monospace;
-      font-size: 10px; color: var(--red);
-      background: #000;
-      border: 1px solid rgba(248,113,113,0.15);
-      border-radius: 4px;
-      padding: 8px 14px;
-      text-align: center;
-      letter-spacing: 1.5px;
-      margin-bottom: 20px;
+      font-size: 11px; color: var(--red);
+      background: #0f0a0a;
+      border: 1px solid var(--red-border);
+      border-radius: 6px; padding: 9px 14px;
+      text-align: center; letter-spacing: 1px; margin-bottom: 20px;
     }
 
     /* ── Cards ── */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-top: 1px solid rgba(255,255,255,0.07);
-      border-radius: 6px;
-      padding: 26px 28px;
-      margin-bottom: 14px;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.95), inset 0 1px 0 rgba(255,255,255,0.03);
-      transition: border-color 0.25s, box-shadow 0.25s;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; padding: 28px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.03);
+      transition: border-color 0.2s;
     }
-    .card:hover {
-      border-color: var(--border-h);
-      box-shadow: 0 8px 40px rgba(0,0,0,0.95), 0 0 0 1px rgba(74,222,128,0.05), inset 0 1px 0 rgba(255,255,255,0.04);
-    }
+    .card:hover { border-color: var(--border-h); }
+
     .card-title {
       font-family: 'Share Tech Mono', monospace;
-      font-size: 10px; color: var(--green);
+      font-size: 11px; color: var(--green);
       letter-spacing: 2px; text-transform: uppercase;
       margin-bottom: 22px;
       display: flex; align-items: center; gap: 10px;
     }
-    .card-title::before { content: "//"; color: var(--green-d); font-size: 13px; }
+    .card-title::before { content: "//"; color: var(--green-dim); font-size: 13px; }
     .card-title::after  { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
 
     /* ── Inputs ── */
     .field { margin-bottom: 20px; }
+
     label {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 10px; color: var(--label);
-      display: block; margin-bottom: 8px;
-      letter-spacing: 1px; text-transform: uppercase;
+      font-size: 12px; font-weight: 500; color: var(--label);
+      display: block; margin-bottom: 8px; letter-spacing: 0.3px;
     }
-    label em { color: var(--muted); font-style: normal; }
+    label em { color: var(--text-dim); font-style: normal; }
 
     input[type="text"] {
       width: 100%;
-      background: #000;
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 4px;
-      padding: 11px 14px;
-      color: var(--text);
-      font-size: 13px;
+      background: #0a0a0a;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px; padding: 12px 14px;
+      color: var(--text); font-size: 14px;
       font-family: 'Share Tech Mono', monospace;
-      outline: none;
+      outline: none; caret-color: var(--green);
       transition: border-color 0.2s, box-shadow 0.2s;
-      caret-color: var(--green);
     }
     input[type="text"]:focus {
-      border-color: rgba(74,222,128,0.55);
-      box-shadow: 0 0 0 3px rgba(74,222,128,0.07), 0 0 20px rgba(74,222,128,0.07);
+      border-color: rgba(74,222,128,0.45);
+      box-shadow: 0 0 0 3px rgba(74,222,128,0.06);
     }
-    input[type="text"]::placeholder { color: var(--muted); }
+    input[type="text"]::placeholder { color: var(--text-dim); }
 
     /* ── Toggle ── */
     .toggle-row { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
-    .toggle { position: relative; width: 44px; height: 22px; flex-shrink: 0; }
+    .toggle { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
     .toggle input { opacity: 0; width: 0; height: 0; }
     .slider {
       position: absolute; inset: 0;
-      background: rgba(0,0,0,0.4); border: 1px solid rgba(74,222,128,0.2);
-      border-radius: 22px; cursor: pointer; transition: all 0.2s;
+      background: #1a1a1a; border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 24px; cursor: pointer; transition: all 0.2s;
     }
     .slider::before {
       content: ""; position: absolute;
-      width: 14px; height: 14px; left: 3px; top: 3px;
-      background: var(--muted); border-radius: 50%;
+      width: 16px; height: 16px; left: 3px; top: 3px;
+      background: var(--text-dim); border-radius: 50%;
       transition: transform 0.2s, background 0.2s;
     }
-    .toggle input:checked + .slider {
-      background: rgba(74,222,128,0.1); border-color: rgba(74,222,128,0.5);
-      box-shadow: 0 0 10px rgba(74,222,128,0.15);
-    }
-    .toggle input:checked + .slider::before { transform: translateX(22px); background: var(--green); }
-    .toggle-label {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px; color: var(--dim); letter-spacing: 0.5px;
-    }
+    .toggle input:checked + .slider { background: rgba(74,222,128,0.1); border-color: rgba(74,222,128,0.4); }
+    .toggle input:checked + .slider::before { transform: translateX(20px); background: var(--green); }
+    .toggle-label { font-size: 14px; color: var(--text-sec); }
 
     /* ── TOS ── */
     .tos-box {
-      background: #000;
-      border: 1px solid rgba(255,255,255,0.05);
-      border-radius: 4px; padding: 14px 16px;
-      max-height: 190px; overflow-y: auto;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 10px; line-height: 2; color: var(--dim);
+      background: #0a0a0a;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 6px; padding: 16px 18px;
+      max-height: 200px; overflow-y: auto;
+      font-size: 12px; line-height: 1.9; color: var(--text-dim);
       margin-bottom: 16px;
-      scrollbar-width: thin; scrollbar-color: var(--green-d) transparent;
+      scrollbar-width: thin; scrollbar-color: #1e3a2a transparent;
     }
-    .tos-box h3 { color: var(--label); font-size: 10px; margin-bottom: 8px; letter-spacing: 2px; text-transform: uppercase; }
-    .tos-box h4 { color: var(--muted); font-size: 10px; margin: 10px 0 4px; letter-spacing: 1px; }
-    .tos-box ul { padding-left: 12px; list-style: none; }
-    .tos-box li::before { content: "> "; color: var(--green-d); }
-    .tos-box li { margin-bottom: 2px; }
+    .tos-box h3 { color: var(--text-sec); font-size: 12px; margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase; }
+    .tos-box h4 { color: var(--text-dim); font-size: 12px; margin: 10px 0 4px; }
+    .tos-box ul { padding-left: 16px; }
+    .tos-box li { margin-bottom: 3px; }
 
     .tos-accept {
       display: flex; align-items: center; gap: 10px;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px; color: var(--dim);
-      margin-bottom: 20px; cursor: pointer; letter-spacing: 0.5px;
+      font-size: 13px; color: var(--text-sec);
+      margin-bottom: 20px; cursor: pointer;
     }
-    .tos-accept input { width: 14px; height: 14px; cursor: pointer; accent-color: var(--green); }
+    .tos-accept input { width: 15px; height: 15px; cursor: pointer; accent-color: var(--green); }
 
     /* ── Button ── */
     .btn {
       display: inline-flex; align-items: center; gap: 8px;
-      padding: 11px 28px; border-radius: 4px;
+      padding: 12px 28px; border-radius: 6px;
       font-family: 'Share Tech Mono', monospace;
       font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
       cursor: pointer; border: none; transition: all 0.2s;
     }
     .btn-primary {
       background: rgba(74,222,128,0.08);
-      border: 1px solid rgba(74,222,128,0.45);
+      border: 1px solid rgba(74,222,128,0.4);
       color: var(--green);
     }
     .btn-primary:hover:not(:disabled) {
       background: rgba(74,222,128,0.14);
       border-color: var(--green);
-      box-shadow: 0 0 24px rgba(74,222,128,0.2), inset 0 0 12px rgba(74,222,128,0.04);
+      box-shadow: 0 0 20px rgba(74,222,128,0.18);
     }
     .btn:disabled { opacity: 0.25; cursor: default; }
 
     #error-msg {
       display: none; margin-top: 14px;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px; color: var(--red);
-      background: var(--red-g);
-      border: 1px solid rgba(248,113,113,0.2);
-      border-radius: 4px; padding: 10px 14px; letter-spacing: 0.5px;
+      font-size: 13px; color: var(--red);
+      background: #0f0a0a;
+      border: 1px solid var(--red-border);
+      border-radius: 6px; padding: 10px 14px;
     }
-    #error-msg::before { content: "[ERR] "; }
+    #error-msg::before { content: "[ERR] "; font-family: 'Share Tech Mono', monospace; }
 
     /* ── Steps ── */
-    .steps { display: flex; flex-direction: column; gap: 16px; }
+    .steps { display: flex; flex-direction: column; gap: 18px; }
     .step { display: flex; gap: 16px; align-items: flex-start; }
     .step-num {
       font-family: 'Share Tech Mono', monospace;
-      width: 28px; height: 28px; border-radius: 4px; flex-shrink: 0;
-      background: rgba(74,222,128,0.05); border: 1px solid rgba(74,222,128,0.25);
+      width: 30px; height: 30px; border-radius: 6px; flex-shrink: 0;
+      background: rgba(74,222,128,0.06); border: 1px solid rgba(74,222,128,0.2);
       color: var(--green); font-size: 12px;
       display: flex; align-items: center; justify-content: center;
     }
-    .step-text { font-size: 14px; color: var(--dim); line-height: 1.6; padding-top: 3px; }
+    .step-text { font-size: 14px; color: var(--text-sec); line-height: 1.7; padding-top: 4px; }
     .step-text strong { color: var(--text); }
 
     /* ── Footer ── */
-    footer {
-      text-align: center; margin-top: 52px;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 10px; color: var(--muted); letter-spacing: 1px;
-    }
-    footer a { color: var(--dim); text-decoration: none; transition: color 0.15s; }
-    footer a:hover { color: var(--text); }
+    footer { text-align: center; margin-top: 52px; font-size: 12px; color: var(--text-dim); }
+    footer a { color: var(--text-dim); text-decoration: none; transition: color 0.15s; }
+    footer a:hover { color: var(--text-sec); }
+    .footer-note { margin-top: 10px; font-size: 12px; }
+    .footer-note a { color: var(--green-dim); text-decoration: underline; text-underline-offset: 3px; }
+    .footer-note a:hover { color: var(--green); }
   </style>
 </head>
 <body>
@@ -330,7 +284,7 @@
   </div>
 
   <div class="field">
-    <label>Search terms <em>[ optional · comma separated ]</em></label>
+    <label>Search terms <em>( optional · comma separated )</em></label>
     <input type="text" id="terms" placeholder="malware, exploit, leak, forum" autocomplete="off">
   </div>
 
@@ -343,7 +297,7 @@
   </div>
 
   <div class="tos-box">
-    <h3>// Terms of Service</h3>
+    <h3>Terms of Service</h3>
     <p>By using RCN WebCrawler you agree to the following terms.</p>
     <h4>1. Permitted Use</h4>
     <ul>
@@ -403,8 +357,8 @@
 
 <footer>
   RCN &nbsp;&middot;&nbsp; <a href="https://github.com/0Day-legalize">github.com/0Day-legalize</a> &nbsp;&middot;&nbsp; for research use only
-  <div style="margin-top:12px;color:#1a3a1a;">
-    want to run it locally? &nbsp;<a href="https://github.com/0Day-legalize/rcn-crawler" style="color:#2d5a2d;text-decoration:underline;text-underline-offset:3px;">get the self-hosted version on github</a>
+  <div class="footer-note">
+    want to run it locally? &nbsp;<a href="https://github.com/0Day-legalize/rcn-crawler">get the self-hosted version on github</a>
   </div>
 </footer>
 

@@ -5,31 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RCN — Job Status</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;500;600&display=swap');
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --green:    #4ade80;
-      --green-d:  #166534;
-      --red:      #f87171;
-      --red-g:    rgba(248,113,113,0.07);
-      --bg:       #030303;
-      --surface:  #000000;
-      --border:   rgba(255,255,255,0.05);
-      --border-h: rgba(74,222,128,0.2);
-      --muted:    #4b7a4b;
-      --text:     #d1fae5;
-      --dim:      #6b9e6b;
-      --label:    #86c986;
+      --green:      #4ade80;
+      --green-dim:  #166534;
+      --red:        #fca5a5;
+      --red-border: rgba(252,165,165,0.2);
+      --bg:         #0a0a0a;
+      --surface:    #111111;
+      --border:     rgba(255,255,255,0.07);
+      --border-h:   rgba(74,222,128,0.25);
+      --text:       #e2e8f0;
+      --text-sec:   #94a3b8;
+      --text-dim:   #64748b;
+      --label:      #cbd5e1;
     }
 
-    html { scrollbar-width: thin; scrollbar-color: var(--green-d) transparent; }
+    html { scrollbar-width: thin; scrollbar-color: #1e3a2a transparent; }
 
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'Rajdhani', 'Segoe UI', system-ui, sans-serif;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
       min-height: 100vh;
       padding: 36px 24px 80px;
       max-width: 740px;
@@ -43,7 +45,7 @@
       position: fixed; inset: 0;
       background: repeating-linear-gradient(
         0deg, transparent, transparent 3px,
-        rgba(0,0,0,0.06) 3px, rgba(0,0,0,0.06) 4px
+        rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 4px
       );
       pointer-events: none; z-index: 100;
     }
@@ -51,31 +53,29 @@
       content: "";
       position: fixed; inset: 0;
       background-image:
-        linear-gradient(rgba(74,222,128,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(74,222,128,0.04) 1px, transparent 1px);
+        linear-gradient(rgba(74,222,128,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(74,222,128,0.03) 1px, transparent 1px);
       background-size: 48px 48px;
       pointer-events: none; z-index: 0;
     }
-
-    @keyframes cursor-blink {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0; }
-    }
     * { position: relative; z-index: 1; }
+
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
 
     /* ── Header ── */
     header {
       display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 28px;
-      padding-bottom: 18px;
+      margin-bottom: 28px; padding-bottom: 20px;
       border-bottom: 1px solid var(--border);
     }
     .header-left { display: flex; align-items: center; gap: 14px; }
-    .header-left img { height: 28px; width: 28px; object-fit: contain; }
+    .header-left img { height: 30px; width: 30px; object-fit: contain; }
+
     .cursor {
       display: inline-block; width: 10px; height: 2px;
       background: var(--green); vertical-align: middle; margin-left: 4px;
-      animation: cursor-blink 1s step-end infinite;
+      animation: blink 1s step-end infinite;
     }
 
     header h1 {
@@ -84,153 +84,105 @@
       letter-spacing: 2px; text-transform: uppercase;
     }
     header a {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 10px; color: var(--dim);
-      text-decoration: none; letter-spacing: 1px;
+      font-size: 13px; color: var(--text-dim);
+      text-decoration: none;
       border: 1px solid var(--border);
-      padding: 6px 14px; border-radius: 4px;
+      padding: 7px 14px; border-radius: 6px;
       transition: all 0.15s;
     }
-    header a:hover { color: var(--text); border-color: rgba(57,211,83,0.3); }
+    header a:hover { color: var(--text-sec); border-color: rgba(255,255,255,0.12); }
 
     /* ── Cards ── */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-top: 1px solid rgba(255,255,255,0.07);
-      border-radius: 6px; padding: 22px 28px;
-      margin-bottom: 14px;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.95), inset 0 1px 0 rgba(255,255,255,0.03);
-      transition: border-color 0.25s, box-shadow 0.25s;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; padding: 24px 28px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.03);
+      transition: border-color 0.2s;
     }
-    .card:hover {
-      border-color: var(--border-h);
-      box-shadow: 0 8px 40px rgba(0,0,0,0.95), 0 0 0 1px rgba(74,222,128,0.05), inset 0 1px 0 rgba(255,255,255,0.04);
-    }
+    .card:hover { border-color: var(--border-h); }
+
     .card-title {
       font-family: 'Share Tech Mono', monospace;
-      font-size: 10px; color: var(--green);
+      font-size: 11px; color: var(--green);
       letter-spacing: 2px; text-transform: uppercase;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
       display: flex; align-items: center; gap: 10px;
     }
-    .card-title::before { content: "//"; color: var(--green-d); font-size: 12px; }
+    .card-title::before { content: "//"; color: var(--green-dim); font-size: 13px; }
     .card-title::after  { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
 
-    /* ── Badge ── */
+    /* ── Status ── */
     .status-row { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
     .badge {
       font-family: 'Share Tech Mono', monospace;
-      font-size: 10px; font-weight: 400;
-      padding: 4px 14px; border-radius: 3px;
+      font-size: 11px; padding: 5px 14px; border-radius: 4px;
       display: inline-flex; align-items: center; gap: 8px;
-      letter-spacing: 2px; text-transform: uppercase;
+      letter-spacing: 1.5px; text-transform: uppercase;
     }
-    .badge-pending { background: rgba(245,158,11,0.08);   color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
-    .badge-running { background: rgba(74,222,128,0.08);   color: var(--green); border: 1px solid rgba(74,222,128,0.3); }
-    .badge-done    { background: rgba(96,165,250,0.08);   color: #93c5fd; border: 1px solid rgba(96,165,250,0.25); }
-    .badge-failed  { background: var(--red-g);             color: var(--red);  border: 1px solid rgba(248,113,113,0.25); }
+    .badge-pending { background: rgba(251,191,36,0.08);  color: #fde68a; border: 1px solid rgba(251,191,36,0.2); }
+    .badge-running { background: rgba(74,222,128,0.08);  color: var(--green); border: 1px solid rgba(74,222,128,0.25); }
+    .badge-done    { background: rgba(96,165,250,0.08);  color: #bfdbfe; border: 1px solid rgba(96,165,250,0.2); }
+    .badge-failed  { background: rgba(252,165,165,0.08); color: var(--red); border: 1px solid var(--red-border); }
 
-    .dot-live {
-      width: 7px; height: 7px; border-radius: 50%;
-      background: var(--green);
-      animation: blink 1s step-end infinite;
-      box-shadow: 0 0 8px var(--green);
-    }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+    .dot-live { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: pulse 1.2s infinite; box-shadow: 0 0 6px var(--green); }
 
-    .status-text {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px; color: var(--dim); letter-spacing: 0.5px;
-    }
+    .status-text { font-size: 14px; color: var(--text-sec); }
 
-    .status-text {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px; color: var(--dim); letter-spacing: 0.5px;
-    }
-    .meta {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 10px; color: var(--muted); line-height: 2.2; letter-spacing: 0.3px;
-    }
-    .meta span { color: var(--dim); }
+    .meta { font-size: 13px; color: var(--text-dim); line-height: 2; }
+    .meta span { color: var(--text-sec); }
 
     /* ── Log ── */
     #log {
-      background: #000;
-      border: 1px solid rgba(57,211,83,0.08);
-      border-radius: 4px;
-      padding: 14px 16px;
-      font-size: 11px; line-height: 1.8; color: var(--muted);
-      height: 230px; overflow-y: auto;
+      background: #0a0a0a;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 6px; padding: 16px 18px;
+      font-size: 12px; line-height: 1.8; color: var(--text-dim);
+      height: 240px; overflow-y: auto;
       font-family: 'Share Tech Mono', monospace;
       white-space: pre-wrap; word-break: break-all;
-      scrollbar-width: thin; scrollbar-color: var(--green-d) transparent;
-    }
-    #log::before {
-      content: "root@rcn:~# tail -f crawl.log\A";
-      color: var(--green-d); display: block; margin-bottom: 8px;
-      white-space: pre;
+      scrollbar-width: thin; scrollbar-color: #1e3a2a transparent;
     }
 
     /* ── Results ── */
     .result-item {
-      border: 1px solid rgba(57,211,83,0.08);
-      border-radius: 6px; padding: 14px 16px;
-      margin-bottom: 10px;
-      background: #000;
+      border: 1px solid var(--border);
+      border-radius: 8px; padding: 16px 18px;
+      margin-bottom: 10px; background: #0d0d0d;
       transition: border-color 0.15s;
     }
-    .result-item:hover { border-color: rgba(57,211,83,0.2); }
-    .result-title {
-      font-size: 14px; font-weight: 600; color: var(--text);
-      margin-bottom: 5px; overflow: hidden;
-      text-overflow: ellipsis; white-space: nowrap;
-    }
-    .result-url {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 10px; color: var(--muted);
-      word-break: break-all; margin-bottom: 10px;
-    }
+    .result-item:hover { border-color: var(--border-h); }
+    .result-title { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .result-url { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--text-dim); word-break: break-all; margin-bottom: 10px; }
     .result-meta { display: flex; gap: 6px; flex-wrap: wrap; }
-    .rbadge {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 9px; padding: 2px 10px; border-radius: 3px;
-      font-weight: 400; letter-spacing: 1px; text-transform: uppercase;
-    }
-    .rb-onion { background: rgba(248,113,113,0.1);  color: #fca5a5; border: 1px solid rgba(248,113,113,0.25); }
-    .rb-clear { background: rgba(96,165,250,0.1);   color: #93c5fd; border: 1px solid rgba(96,165,250,0.25); }
-    .rb-term  { background: rgba(74,222,128,0.1);   color: var(--green); border: 1px solid rgba(74,222,128,0.25); }
-    .rb-dl    { background: rgba(251,191,36,0.1);   color: #fde68a; border: 1px solid rgba(251,191,36,0.25); }
 
-    /* ── Buttons ── */
+    .rbadge { font-family: 'Share Tech Mono', monospace; font-size: 10px; padding: 3px 10px; border-radius: 4px; font-weight: 400; letter-spacing: 0.5px; text-transform: uppercase; }
+    .rb-onion { background: rgba(252,165,165,0.08); color: var(--red);  border: 1px solid var(--red-border); }
+    .rb-clear { background: rgba(96,165,250,0.08);  color: #93c5fd; border: 1px solid rgba(96,165,250,0.2); }
+    .rb-term  { background: rgba(74,222,128,0.08);  color: var(--green); border: 1px solid rgba(74,222,128,0.2); }
+    .rb-dl    { background: rgba(251,191,36,0.08);  color: #fde68a; border: 1px solid rgba(251,191,36,0.2); }
+
+    /* ── Export buttons ── */
     .export-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
     .btn {
       display: inline-flex; align-items: center; gap: 8px;
-      padding: 8px 18px; border-radius: 4px;
+      padding: 9px 18px; border-radius: 6px;
       font-family: 'Share Tech Mono', monospace;
-      font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
-      cursor: pointer; border: none; text-decoration: none;
-      transition: all 0.15s;
+      font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase;
+      cursor: pointer; border: none; text-decoration: none; transition: all 0.15s;
     }
-    .btn-blue  { background: rgba(88,166,255,0.06); border: 1px solid rgba(88,166,255,0.2); color: #60a5fa; }
-    .btn-blue:hover  { background: rgba(88,166,255,0.12); box-shadow: 0 0 16px rgba(88,166,255,0.1); }
-    .btn-amber { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.2); color: #f59e0b; }
-    .btn-amber:hover { background: rgba(245,158,11,0.12); }
+    .btn-blue  { background: rgba(96,165,250,0.07); border: 1px solid rgba(96,165,250,0.2); color: #93c5fd; }
+    .btn-blue:hover  { background: rgba(96,165,250,0.13); }
+    .btn-amber { background: rgba(251,191,36,0.07); border: 1px solid rgba(251,191,36,0.2); color: #fde68a; }
+    .btn-amber:hover { background: rgba(251,191,36,0.13); }
 
-    #empty {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px; color: var(--muted);
-      padding: 28px 0; text-align: center; letter-spacing: 1px;
-    }
-    #empty::before { content: "// "; color: var(--green-d); }
+    #empty { font-size: 14px; color: var(--text-dim); padding: 28px 0; text-align: center; }
 
     /* ── Footer ── */
-    footer {
-      text-align: center; margin-top: 48px;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 10px; color: var(--muted); letter-spacing: 1px;
-    }
-    footer a { color: var(--dim); text-decoration: none; }
+    footer { text-align: center; margin-top: 48px; font-size: 12px; color: var(--text-dim); }
+    footer a { color: var(--text-dim); text-decoration: none; }
 
     @media print {
       body { background:#fff; color:#000; }
@@ -255,7 +207,7 @@
 <div class="card">
   <div class="status-row">
     <span id="badge" class="badge badge-pending">pending</span>
-    <span id="status-text" class="status-text">waiting in queue...</span>
+    <span id="status-text" class="status-text">Waiting in queue…</span>
   </div>
   <div class="meta" id="meta"></div>
 </div>
@@ -272,7 +224,7 @@
     <button class="btn btn-amber" onclick="window.print()">[ export pdf ]</button>
   </div>
   <div id="results-list"></div>
-  <div id="empty">results will appear here when the crawl finishes</div>
+  <div id="empty">Results will appear here when the crawl finishes.</div>
 </div>
 
 <footer>
@@ -297,10 +249,10 @@ const exportRow  = document.getElementById("export-row");
 document.getElementById("btn-download").href = `/api/jobs/${jobId}/download`;
 
 const BADGE_MAP = {
-  pending: ["badge-pending", "waiting in queue..."],
-  running: ["badge-running", "crawl in progress..."],
-  done:    ["badge-done",    "operation complete"],
-  failed:  ["badge-failed",  "operation failed"],
+  pending: ["badge-pending", "Waiting in queue…"],
+  running: ["badge-running", "Crawl in progress…"],
+  done:    ["badge-done",    "Operation complete"],
+  failed:  ["badge-failed",  "Operation failed"],
 };
 
 function esc(s) {
@@ -308,11 +260,10 @@ function esc(s) {
 }
 
 function colorLog(line) {
-  if (/error|fail/i.test(line))                    return `<span style="color:#ff4444">${esc(line)}</span>`;
-  if (/warn/i.test(line))                          return `<span style="color:#f59e0b">${esc(line)}</span>`;
-  if (/✓|done|success|graph|circuit/i.test(line))  return `<span style="color:#39d353">${esc(line)}</span>`;
-  if (/\[server\]/i.test(line))                    return `<span style="color:#1a3a1a">${esc(line)}</span>`;
-  return `<span style="color:#3a5a3a">${esc(line)}</span>`;
+  if (/error|fail/i.test(line))                   return `<span style="color:#fca5a5">${line}</span>`;
+  if (/warn/i.test(line))                         return `<span style="color:#fde68a">${line}</span>`;
+  if (/✓|done|success|graph|circuit/i.test(line)) return `<span style="color:#4ade80">${line}</span>`;
+  return `<span style="color:#64748b">${line}</span>`;
 }
 
 function renderPage(p) {
@@ -343,12 +294,12 @@ async function poll() {
     statusText.textContent = text;
 
     metaEl.innerHTML = [
-      `<span>target:</span> ${esc(job.url)}`,
-      job.search_terms ? `<span>terms:</span> ${esc(job.search_terms)}` : "",
-      job.started_at   ? `<span>started:</span> ${new Date(job.started_at).toLocaleTimeString()}` : "",
-      job.finished_at  ? `<span>finished:</span> ${new Date(job.finished_at).toLocaleTimeString()}` : "",
-      job.page_count   ? `<span>pages:</span> ${job.page_count}` : "",
-      job.error        ? `<span style="color:#ff4444">error:</span> ${esc(job.error)}` : "",
+      `<span>Target:</span> ${esc(job.url)}`,
+      job.search_terms ? `<span>Terms:</span> ${esc(job.search_terms)}` : "",
+      job.started_at   ? `<span>Started:</span> ${new Date(job.started_at).toLocaleTimeString()}` : "",
+      job.finished_at  ? `<span>Finished:</span> ${new Date(job.finished_at).toLocaleTimeString()}` : "",
+      job.page_count   ? `<span>Pages:</span> ${job.page_count}` : "",
+      job.error        ? `<span style="color:#fca5a5">Error:</span> ${esc(job.error)}` : "",
     ].filter(Boolean).join(" &nbsp;&middot;&nbsp; ");
 
     const log     = job.log ?? "";
@@ -372,7 +323,7 @@ async function poll() {
           exportRow.style.display = "flex";
           resultsList.innerHTML = pages.map(renderPage).join("");
         } else {
-          emptyEl.textContent = "no matching pages found";
+          emptyEl.textContent = "No matching pages found.";
         }
       }
     }
