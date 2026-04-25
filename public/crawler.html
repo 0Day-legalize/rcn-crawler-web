@@ -5,273 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RCN — WebCrawler</title>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body { background: #050505; color: #fff; font-family: 'Caveat', cursive; overflow-x: hidden; min-height: 100vh; }
-
-/* grain */
-body::before {
-  content: '';
-  position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0.045;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  background-repeat: repeat; background-size: 200px 200px;
-}
-/* vignette */
-body::after {
-  content: '';
-  position: fixed; inset: 0; z-index: 9998; pointer-events: none;
-  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.75) 100%);
-}
-
-@keyframes fadeUp   { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
-@keyframes fadeIn   { from { opacity:0; } to { opacity:1; } }
-@keyframes blink    { 0%,100%{opacity:1} 50%{opacity:0} }
-@keyframes logoPulse {
-  0%,100% { text-shadow:0 0 14px rgba(255,255,255,0.6),0 0 30px rgba(255,255,255,0.2); }
-  50%      { text-shadow:0 0 20px rgba(255,255,255,0.9),0 0 50px rgba(255,255,255,0.35); }
-}
-@keyframes navSlideDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
-@keyframes titlePulse {
-  0%,100% { text-shadow:0 0 12px rgba(192,57,43,0.7),0 0 30px rgba(192,57,43,0.3); }
-  50%      { text-shadow:0 0 22px rgba(192,57,43,1),0 0 50px rgba(192,57,43,0.5); }
-}
-
-.reveal { opacity:0; transform:translateY(24px); transition:opacity 0.6s ease, transform 0.6s ease; }
-.reveal.visible { opacity:1; transform:none; }
-
-/* ── NAV ── */
-.nav {
-  position:fixed; top:0; left:0; right:0; z-index:200;
-  height:56px; background:rgba(20,20,20,0.97);
-  backdrop-filter:blur(16px);
-  border-bottom:1px solid rgba(192,57,43,0.35);
-  display:flex; align-items:center; padding:0 48px; gap:32px;
-  animation:navSlideDown 0.6s ease both;
-}
-.nav-logo {
-  font-family:'Special Elite',serif; font-size:20px; color:#fff;
-  letter-spacing:0.14em; text-decoration:none; flex-shrink:0;
-  text-shadow:0 0 14px rgba(255,255,255,0.6),0 0 30px rgba(255,255,255,0.2);
-  animation:logoPulse 3s ease-in-out infinite;
-}
-.nav-logo span { color:#ff2a2a; text-shadow:0 0 16px rgba(255,42,42,1),0 0 40px rgba(255,42,42,0.8),0 0 60px rgba(255,42,42,0.4); }
-.nav-links { display:flex; gap:28px; align-items:center; }
-.nav-link {
-  font-family:'Caveat',cursive; font-size:15px; color:#fff;
-  text-decoration:none; letter-spacing:0.04em;
-  text-shadow:0 0 10px rgba(255,255,255,0.5); transition:text-shadow 0.2s;
-}
-.nav-link:hover { text-shadow:0 0 16px rgba(255,255,255,1),0 0 40px rgba(255,255,255,0.5); }
-.nav-right { margin-left:auto; display:flex; gap:12px; align-items:center; }
-.nav-back {
-  height:32px; border:1px solid #2a2a2a; border-radius:2px;
-  padding:0 18px; display:flex; align-items:center;
-  font-family:'Caveat',cursive; font-size:13px; color:#888;
-  text-decoration:none; transition:border-color 0.2s, color 0.2s;
-}
-.nav-back:hover { border-color:#c0392b; color:#fff; }
-.nav-cta {
-  height:32px; background:#e8281e; border-radius:2px;
-  padding:0 18px; display:flex; align-items:center;
-  font-family:'Caveat',cursive; font-size:14px; font-weight:700; color:#fff;
-  text-decoration:none; letter-spacing:0.06em;
-  text-shadow:0 0 12px rgba(255,255,255,0.9), 0 1px 0 rgba(0,0,0,0.3);
-  box-shadow:0 0 14px rgba(232,40,30,0.9),0 0 32px rgba(232,40,30,0.5);
-  transition:background 0.2s, box-shadow 0.2s;
-}
-.nav-cta:hover { background:#ff3328; box-shadow:0 0 20px rgba(255,51,40,1),0 0 50px rgba(255,51,40,0.7); }
-
-@media (max-width:768px) {
-  .nav { padding:0 20px; }
-  .nav-links { display:none; }
-  .page { padding:90px 20px 60px; }
-}
-
-/* ── PAGE ── */
-.page { position:relative; z-index:1; max-width:760px; margin:0 auto; padding:90px 40px 80px; }
-
-.page-glow {
-  position:fixed; top:0; left:50%; transform:translateX(-50%);
-  width:800px; height:500px; pointer-events:none; z-index:0;
-  background:radial-gradient(ellipse at 50% 20%, rgba(80,0,0,0.2) 0%, transparent 70%);
-}
-
-/* ── HEADER ── */
-.page-header {
-  text-align:center; padding:48px 0 40px;
-  border-bottom:1px solid rgba(192,57,43,0.15);
-  margin-bottom:40px;
-  animation:fadeUp 0.7s 0.2s both;
-}
-.logo-wrap {
-  display:inline-flex; align-items:center; justify-content:center;
-  width:80px; height:80px; border-radius:12px;
-  border:1px solid rgba(192,57,43,0.3);
-  background:rgba(192,57,43,0.04);
-  margin-bottom:20px;
-  box-shadow:0 0 40px rgba(192,57,43,0.1), inset 0 0 20px rgba(192,57,43,0.03);
-}
-.logo-wrap img { height:50px; width:50px; object-fit:contain; }
-.page-eyebrow {
-  font-family:'Special Elite',serif; font-size:11px;
-  color:#555; letter-spacing:0.2em; text-transform:uppercase; margin-bottom:12px;
-}
-.page-title {
-  font-family:'Special Elite',serif; font-size:42px;
-  color:#fff; letter-spacing:0.08em; text-transform:uppercase;
-  animation:titlePulse 4s ease-in-out infinite; margin-bottom:8px;
-}
-.page-title span { color:#c0392b; }
-.page-sub { font-family:'Special Elite',serif; font-size:14px; color:#444; letter-spacing:0.08em; }
-
-/* ── WARNING ── */
-.warn-stripe {
-  font-family:'Special Elite',serif; font-size:12px; color:#c0392b;
-  background:#080303; border:1px solid rgba(192,57,43,0.2);
-  border-radius:2px; padding:10px 16px;
-  text-align:center; letter-spacing:0.12em; text-transform:uppercase;
-  margin-bottom:28px;
-  animation:fadeUp 0.6s 0.4s both;
-}
-
-/* ── CARDS ── */
-.card {
-  background:#0a0a0a;
-  border:1px solid rgba(192,57,43,0.15);
-  border-radius:2px; padding:32px;
-  margin-bottom:20px;
-  box-shadow:0 0 60px rgba(0,0,0,0.8), inset 0 0 40px rgba(0,0,0,0.3);
-  transition:border-color 0.25s;
-}
-.card:hover { border-color:rgba(192,57,43,0.3); }
-
-.card-title {
-  font-family:'Special Elite',serif; font-size:12px;
-  color:#c0392b; letter-spacing:0.2em; text-transform:uppercase;
-  margin-bottom:24px;
-  display:flex; align-items:center; gap:12px;
-}
-.card-title::before { content:'§'; color:#3a0a0a; font-size:16px; }
-.card-title::after  { content:''; flex:1; height:1px; background:linear-gradient(90deg, rgba(192,57,43,0.2), transparent); }
-
-/* ── FIELDS ── */
-.field { margin-bottom:22px; }
-.field-label {
-  font-family:'Special Elite',serif; font-size:11px;
-  color:#666; letter-spacing:0.15em; text-transform:uppercase;
-  display:block; margin-bottom:10px;
-}
-.field-label em { color:#333; font-style:normal; }
-
-input[type="text"] {
-  width:100%; background:#050505;
-  border:1px solid #1a1a1a; border-radius:1px;
-  padding:12px 16px; color:#ccc; font-size:15px;
-  font-family:'Special Elite',serif; letter-spacing:0.04em;
-  outline:none; caret-color:#c0392b;
-  transition:border-color 0.2s, box-shadow 0.2s;
-}
-input[type="text"]:focus {
-  border-color:rgba(192,57,43,0.5);
-  box-shadow:0 0 0 3px rgba(192,57,43,0.06), 0 0 16px rgba(192,57,43,0.06);
-}
-input[type="text"]::placeholder { color:#2a2a2a; }
-
-/* ── TOGGLE ── */
-.toggle-row { display:flex; align-items:center; gap:14px; margin-bottom:22px; }
-.toggle { position:relative; width:44px; height:24px; flex-shrink:0; }
-.toggle input { opacity:0; width:0; height:0; }
-.slider {
-  position:absolute; inset:0;
-  background:#0d0d0d; border:1px solid #1f1f1f;
-  border-radius:24px; cursor:pointer; transition:all 0.2s;
-}
-.slider::before {
-  content:''; position:absolute;
-  width:16px; height:16px; left:3px; top:3px;
-  background:#333; border-radius:50%; transition:transform 0.2s, background 0.2s;
-}
-.toggle input:checked + .slider { background:rgba(192,57,43,0.1); border-color:rgba(192,57,43,0.4); }
-.toggle input:checked + .slider::before { transform:translateX(20px); background:#c0392b; }
-.toggle-label { font-family:'Special Elite',serif; font-size:13px; color:#555; letter-spacing:0.04em; }
-
-/* ── TOS ── */
-.tos-box {
-  background:#030303; border:1px solid #111;
-  border-radius:1px; padding:16px 18px;
-  max-height:200px; overflow-y:auto;
-  font-family:'Caveat',cursive; font-size:14px;
-  line-height:1.8; color:#3a3a3a; margin-bottom:16px;
-  scrollbar-width:thin; scrollbar-color:#1a0808 transparent;
-}
-.tos-box h3 { font-family:'Special Elite',serif; color:#555; font-size:11px; margin-bottom:8px; letter-spacing:0.15em; text-transform:uppercase; }
-.tos-box h4 { font-family:'Special Elite',serif; color:#333; font-size:11px; margin:10px 0 4px; letter-spacing:0.1em; }
-.tos-box ul { padding-left:16px; }
-.tos-box li { margin-bottom:3px; }
-
-.tos-accept {
-  display:flex; align-items:center; gap:10px;
-  font-family:'Special Elite',serif; font-size:13px; color:#555;
-  margin-bottom:22px; cursor:pointer; letter-spacing:0.04em;
-}
-.tos-accept input { width:14px; height:14px; cursor:pointer; accent-color:#c0392b; }
-
-/* ── BUTTON ── */
-.btn-primary {
-  height:44px; background:#c0392b; border-radius:2px;
-  padding:0 32px; display:inline-flex; align-items:center;
-  font-family:'Special Elite',serif; font-size:14px; color:#fff;
-  letter-spacing:0.1em; text-transform:uppercase;
-  cursor:pointer; border:none;
-  box-shadow:0 0 16px rgba(192,57,43,0.5);
-  transition:background 0.2s, box-shadow 0.2s;
-}
-.btn-primary:hover:not(:disabled) {
-  background:#e8281e;
-  box-shadow:0 0 28px rgba(232,40,30,0.8), 0 0 60px rgba(232,40,30,0.3);
-}
-.btn-primary:disabled { opacity:0.25; cursor:default; }
-
-#error-msg {
-  display:none; margin-top:14px;
-  font-family:'Special Elite',serif; font-size:13px; color:#e74c3c;
-  background:#080202; border:1px solid rgba(192,57,43,0.2);
-  border-left:3px solid #c0392b;
-  border-radius:1px; padding:10px 16px; letter-spacing:0.04em;
-}
-
-/* ── STEPS ── */
-.steps { display:flex; flex-direction:column; gap:20px; }
-.step { display:flex; gap:18px; align-items:flex-start; }
-.step-num {
-  font-family:'Special Elite',serif;
-  width:32px; height:32px; border-radius:1px; flex-shrink:0;
-  background:#0d0505; border:1px solid rgba(192,57,43,0.25);
-  color:#c0392b; font-size:13px; letter-spacing:0.06em;
-  display:flex; align-items:center; justify-content:center;
-}
-.step-text { font-family:'Caveat',cursive; font-size:16px; color:#555; line-height:1.6; padding-top:4px; }
-.step-text strong { color:#888; }
-
-/* ── FOOTER ── */
-.page-footer {
-  text-align:center; margin-top:60px; padding-top:24px;
-  border-top:1px solid rgba(192,57,43,0.08);
-  font-family:'Caveat',cursive; font-size:13px; color:#333;
-}
-.page-footer a { color:#333; text-decoration:none; transition:color 0.2s; }
-.page-footer a:hover { color:#c0392b; }
-.footer-note { margin-top:8px; font-size:13px; }
-.footer-note a { color:#2a2a2a; text-decoration:underline; text-underline-offset:3px; }
-.footer-note a:hover { color:#555; }
-</style>
+<link rel="stylesheet" href="/css/shared.css">
+<link rel="stylesheet" href="/css/crawler.css">
 </head>
 <body>
 
 <div class="page-glow"></div>
 
-<!-- NAV -->
 <nav class="nav">
   <a href="/" class="nav-logo">R<span>C</span>N</a>
   <div class="nav-links">
@@ -288,7 +28,6 @@ input[type="text"]::placeholder { color:#2a2a2a; }
 
 <div class="page">
 
-  <!-- Header -->
   <div class="page-header">
     <div class="logo-wrap"><img src="/logo.png" alt="RCN"></div>
     <div class="page-eyebrow">// darkweb crawler · tor-routed · v1.0</div>
@@ -296,10 +35,8 @@ input[type="text"]::placeholder { color:#2a2a2a; }
     <div class="page-sub">Dark web &amp; clearnet intelligence platform</div>
   </div>
 
-  <!-- Warning -->
   <div class="warn-stripe">&#9888; &nbsp; Authorized security research and OSINT use only &nbsp; &#9888;</div>
 
-  <!-- Crawl form -->
   <div class="card reveal">
     <div class="card-title">Initialize Crawl</div>
 
@@ -350,7 +87,7 @@ input[type="text"]::placeholder { color:#2a2a2a; }
         <li>Logs may be shared with authorities if illegal activity is detected.</li>
       </ul>
       <h4>5. Disclaimer</h4>
-      <p style="margin-top:6px">This service is provided as-is with no warranty. The operator is not responsible for how results are used. Violation of these terms results in immediate and permanent ban.</p>
+      <p style="margin-top:6px">This service is provided as-is with no warranty. Violation of these terms results in immediate and permanent ban.</p>
     </div>
 
     <label class="tos-accept">
@@ -362,7 +99,6 @@ input[type="text"]::placeholder { color:#2a2a2a; }
     <div id="error-msg"></div>
   </div>
 
-  <!-- Guide -->
   <div class="card reveal">
     <div class="card-title">Operation Guide</div>
     <div class="steps">
@@ -390,70 +126,8 @@ input[type="text"]::placeholder { color:#2a2a2a; }
 
 </div>
 
-<script>
-// Canvas grain
-(function() {
-  const c = document.createElement('canvas');
-  c.width = 300; c.height = 300;
-  c.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;opacity:0.03;pointer-events:none;z-index:9997;mix-blend-mode:screen;';
-  const ctx = c.getContext('2d');
-  function grain() {
-    const img = ctx.createImageData(300,300);
-    for (let i=0;i<img.data.length;i+=4){const v=Math.random()*255;img.data[i]=img.data[i+1]=img.data[i+2]=v;img.data[i+3]=255;}
-    ctx.putImageData(img,0,0); requestAnimationFrame(grain);
-  }
-  grain(); document.body.appendChild(c);
-})();
-
-// Scroll reveal
-const obs = new IntersectionObserver(entries => {
-  entries.forEach((e,i) => {
-    if (e.isIntersecting) { setTimeout(()=>e.target.classList.add('visible'), i*100); obs.unobserve(e.target); }
-  });
-}, { threshold: 0.1 });
-document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
-
-// Form logic
-const tosEl    = document.getElementById('tos');
-const submitBtn= document.getElementById('btn-submit');
-const errorEl  = document.getElementById('error-msg');
-
-tosEl.addEventListener('change', () => { submitBtn.disabled = !tosEl.checked; });
-
-function showError(msg) { errorEl.textContent = msg; errorEl.style.display = 'block'; }
-
-submitBtn.addEventListener('click', async () => {
-  errorEl.style.display = 'none';
-  const url         = document.getElementById('url').value.trim();
-  const searchTerms = document.getElementById('terms').value.trim();
-  const onionOnly   = document.getElementById('onion-only').checked;
-
-  if (!url) { showError('Target URL is required.'); return; }
-
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'Initializing...';
-
-  try {
-    const res = await fetch('/api/jobs', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url, searchTerms, onionOnly, tosAccepted: true }),
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      showError(data.error ?? 'Failed to submit job.');
-      if (data.jobId) window.location.href = `/job.html?id=${data.jobId}`;
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Execute Crawl →';
-      return;
-    }
-    window.location.href = `/job.html?id=${data.jobId}`;
-  } catch (err) {
-    showError(`Connection failed: ${err.message}`);
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Execute Crawl →';
-  }
-});
-</script>
+<script src="/js/grain.js"></script>
+<script src="/js/reveal.js"></script>
+<script src="/js/crawler.js"></script>
 </body>
 </html>

@@ -5,246 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RCN — Job Status</title>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body { background: #050505; color: #fff; font-family: 'Caveat', cursive; overflow-x: hidden; min-height: 100vh; }
-
-/* grain */
-body::before {
-  content: '';
-  position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0.045;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  background-repeat: repeat; background-size: 200px 200px;
-}
-/* vignette */
-body::after {
-  content: '';
-  position: fixed; inset: 0; z-index: 9998; pointer-events: none;
-  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.75) 100%);
-}
-
-@keyframes fadeUp  { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-@keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
-@keyframes blink   { 0%,100%{opacity:1} 50%{opacity:0} }
-@keyframes pulse   { 0%,100%{opacity:1} 50%{opacity:0.3} }
-@keyframes logoPulse {
-  0%,100% { text-shadow:0 0 14px rgba(255,255,255,0.6),0 0 30px rgba(255,255,255,0.2); }
-  50%      { text-shadow:0 0 20px rgba(255,255,255,0.9),0 0 50px rgba(255,255,255,0.35); }
-}
-@keyframes navSlideDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* ── NAV ── */
-.nav {
-  position:fixed; top:0; left:0; right:0; z-index:200;
-  height:56px; background:rgba(20,20,20,0.97);
-  backdrop-filter:blur(16px);
-  border-bottom:1px solid rgba(192,57,43,0.35);
-  display:flex; align-items:center; padding:0 48px; gap:32px;
-  animation:navSlideDown 0.6s ease both;
-}
-.nav-logo {
-  font-family:'Special Elite',serif; font-size:20px; color:#fff;
-  letter-spacing:0.14em; text-decoration:none; flex-shrink:0;
-  text-shadow:0 0 14px rgba(255,255,255,0.6),0 0 30px rgba(255,255,255,0.2);
-  animation:logoPulse 3s ease-in-out infinite;
-}
-.nav-logo span { color:#ff2a2a; text-shadow:0 0 16px rgba(255,42,42,1),0 0 40px rgba(255,42,42,0.8),0 0 60px rgba(255,42,42,0.4); }
-.nav-links { display:flex; gap:28px; align-items:center; }
-.nav-link {
-  font-family:'Caveat',cursive; font-size:15px; color:#fff;
-  text-decoration:none; letter-spacing:0.04em;
-  text-shadow:0 0 10px rgba(255,255,255,0.5); transition:text-shadow 0.2s;
-}
-.nav-link:hover { text-shadow:0 0 16px rgba(255,255,255,1),0 0 40px rgba(255,255,255,0.5); }
-.nav-right { margin-left:auto; display:flex; gap:12px; align-items:center; }
-.nav-back {
-  height:32px; border:1px solid #2a2a2a; border-radius:2px;
-  padding:0 18px; display:flex; align-items:center;
-  font-family:'Caveat',cursive; font-size:13px; color:#888;
-  text-decoration:none; transition:border-color 0.2s, color 0.2s;
-}
-.nav-back:hover { border-color:#c0392b; color:#fff; }
-.nav-cta {
-  height:32px; background:#e8281e; border-radius:2px;
-  padding:0 18px; display:flex; align-items:center;
-  font-family:'Caveat',cursive; font-size:14px; font-weight:700; color:#fff;
-  text-decoration:none; letter-spacing:0.06em;
-  text-shadow:0 0 12px rgba(255,255,255,0.9), 0 1px 0 rgba(0,0,0,0.3);
-  box-shadow:0 0 14px rgba(232,40,30,0.9),0 0 32px rgba(232,40,30,0.5);
-  transition:background 0.2s, box-shadow 0.2s;
-}
-.nav-cta:hover { background:#ff3328; box-shadow:0 0 20px rgba(255,51,40,1),0 0 50px rgba(255,51,40,0.7); }
-
-@media (max-width:768px) {
-  .nav { padding:0 20px; }
-  .nav-links { display:none; }
-  .page { padding:90px 20px 60px; }
-}
-
-/* ── PAGE ── */
-.page { position:relative; z-index:1; max-width:760px; margin:0 auto; padding:90px 40px 80px; }
-.page-glow {
-  position:fixed; top:0; left:50%; transform:translateX(-50%);
-  width:800px; height:500px; pointer-events:none; z-index:0;
-  background:radial-gradient(ellipse at 50% 20%, rgba(80,0,0,0.18) 0%, transparent 70%);
-}
-
-/* ── PAGE HEADER ── */
-.page-header {
-  display:flex; justify-content:space-between; align-items:center;
-  margin-bottom:32px; padding-bottom:20px;
-  border-bottom:1px solid rgba(192,57,43,0.15);
-  animation:fadeUp 0.6s 0.2s both;
-}
-.page-header-left { display:flex; align-items:center; gap:14px; }
-.page-header-left img { height:32px; width:32px; object-fit:contain; }
-.page-header h1 {
-  font-family:'Special Elite',serif; font-size:20px; color:#fff;
-  letter-spacing:0.1em; text-transform:uppercase;
-}
-.page-header h1 span { color:#c0392b; }
-.back-btn {
-  height:32px; border:1px solid #2a2a2a; border-radius:2px;
-  padding:0 18px; display:flex; align-items:center;
-  font-family:'Special Elite',serif; font-size:12px; color:#555;
-  text-decoration:none; letter-spacing:0.08em; text-transform:uppercase;
-  transition:border-color 0.2s, color 0.2s;
-}
-.back-btn:hover { border-color:#c0392b; color:#fff; }
-
-/* ── CARDS ── */
-.card {
-  background:#0a0a0a;
-  border:1px solid rgba(192,57,43,0.15);
-  border-radius:2px; padding:28px 32px;
-  margin-bottom:16px;
-  box-shadow:0 0 60px rgba(0,0,0,0.8), inset 0 0 40px rgba(0,0,0,0.3);
-  transition:border-color 0.25s;
-  animation:fadeUp 0.6s both;
-}
-.card:hover { border-color:rgba(192,57,43,0.3); }
-.card:nth-child(2) { animation-delay:0.1s; }
-.card:nth-child(3) { animation-delay:0.2s; }
-
-.card-title {
-  font-family:'Special Elite',serif; font-size:12px;
-  color:#c0392b; letter-spacing:0.2em; text-transform:uppercase;
-  margin-bottom:20px;
-  display:flex; align-items:center; gap:12px;
-}
-.card-title::before { content:'§'; color:#3a0a0a; font-size:16px; }
-.card-title::after  { content:''; flex:1; height:1px; background:linear-gradient(90deg, rgba(192,57,43,0.2), transparent); }
-
-/* ── STATUS BADGE ── */
-.status-row { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
-.badge {
-  font-family:'Special Elite',serif; font-size:11px;
-  padding:4px 14px; border-radius:1px;
-  display:inline-flex; align-items:center; gap:8px;
-  letter-spacing:0.14em; text-transform:uppercase;
-}
-.badge-pending { background:rgba(243,156,18,0.08);  color:#f39c12; border:1px solid rgba(243,156,18,0.25); }
-.badge-running { background:rgba(192,57,43,0.1);    color:#e74c3c; border:1px solid rgba(192,57,43,0.3); }
-.badge-done    { background:rgba(46,204,113,0.08);  color:#2ecc71; border:1px solid rgba(46,204,113,0.25); }
-.badge-failed  { background:rgba(192,57,43,0.08);   color:#c0392b; border:1px solid rgba(192,57,43,0.2); }
-
-.dot-live {
-  width:7px; height:7px; border-radius:50%; background:#e74c3c;
-  animation:pulse 1s infinite; box-shadow:0 0 8px rgba(231,76,60,0.8);
-}
-
-.status-text { font-family:'Special Elite',serif; font-size:13px; color:#555; letter-spacing:0.06em; }
-
-.meta { font-family:'Special Elite',serif; font-size:12px; color:#444; line-height:2.2; letter-spacing:0.04em; }
-.meta span { color:#666; }
-
-/* ── LOG ── */
-#log {
-  background:#030303; border:1px solid #111;
-  border-radius:1px; padding:16px 18px;
-  font-size:13px; line-height:1.8; color:#333;
-  height:240px; overflow-y:auto;
-  font-family:'Special Elite',serif;
-  white-space:pre-wrap; word-break:break-all;
-  letter-spacing:0.03em;
-  scrollbar-width:thin; scrollbar-color:#1a0808 transparent;
-}
-
-/* ── RESULTS ── */
-.result-item {
-  border:1px solid rgba(192,57,43,0.12);
-  border-radius:1px; padding:18px 20px;
-  margin-bottom:12px;
-  background:linear-gradient(135deg, #0a0404, #080808);
-  transition:border-color 0.2s;
-}
-.result-item:hover { border-color:rgba(192,57,43,0.35); }
-.result-title {
-  font-family:'Special Elite',serif; font-size:15px;
-  color:#ccc; margin-bottom:6px;
-  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-  letter-spacing:0.04em;
-}
-.result-url {
-  font-family:'Special Elite',serif; font-size:11px;
-  color:#333; word-break:break-all; margin-bottom:10px; letter-spacing:0.04em;
-}
-.result-meta { display:flex; gap:6px; flex-wrap:wrap; }
-.rbadge {
-  font-family:'Special Elite',serif; font-size:10px;
-  padding:3px 10px; border-radius:1px;
-  letter-spacing:0.12em; text-transform:uppercase;
-}
-.rb-onion { background:rgba(192,57,43,0.1);  color:#c0392b; border:1px solid rgba(192,57,43,0.25); }
-.rb-clear { background:rgba(52,152,219,0.08); color:#5dade2; border:1px solid rgba(52,152,219,0.2); }
-.rb-term  { background:rgba(46,204,113,0.08); color:#2ecc71; border:1px solid rgba(46,204,113,0.2); }
-.rb-dl    { background:rgba(243,156,18,0.08); color:#f39c12; border:1px solid rgba(243,156,18,0.2); }
-
-/* ── EXPORT ── */
-.export-row { display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
-.btn {
-  height:38px; border-radius:2px;
-  padding:0 20px; display:inline-flex; align-items:center; gap:8px;
-  font-family:'Special Elite',serif; font-size:12px;
-  letter-spacing:0.1em; text-transform:uppercase;
-  cursor:pointer; border:none; text-decoration:none; transition:all 0.2s;
-}
-.btn-primary { background:#c0392b; color:#fff; box-shadow:0 0 14px rgba(192,57,43,0.4); }
-.btn-primary:hover { background:#e8281e; box-shadow:0 0 24px rgba(232,40,30,0.7); }
-.btn-ghost { background:transparent; border:1px solid #2a2a2a; color:#555; }
-.btn-ghost:hover { border-color:#c0392b; color:#fff; }
-
-#empty {
-  font-family:'Special Elite',serif; font-size:14px;
-  color:#333; padding:32px 0; text-align:center; letter-spacing:0.06em;
-}
-
-/* ── FOOTER ── */
-.page-footer {
-  text-align:center; margin-top:60px; padding-top:20px;
-  border-top:1px solid rgba(192,57,43,0.08);
-  font-family:'Caveat',cursive; font-size:13px; color:#333;
-}
-.page-footer a { color:#333; text-decoration:none; transition:color 0.2s; }
-.page-footer a:hover { color:#c0392b; }
-
-@media print {
-  body { background:#fff; color:#000; }
-  body::before, body::after { display:none; }
-  .nav, .back-btn, .export-row, #log, .card:has(#log) { display:none !important; }
-  .result-item { border:1px solid #ddd; background:#fff; break-inside:avoid; }
-  .result-title,.result-url { color:#000; }
-  .rbadge { border:1px solid #ccc; color:#333; background:#f5f5f5; }
-}
-</style>
+<link rel="stylesheet" href="/css/shared.css">
+<link rel="stylesheet" href="/css/job.css">
 </head>
 <body>
 
 <div class="page-glow"></div>
 
-<!-- NAV -->
 <nav class="nav">
   <a href="/" class="nav-logo">R<span>C</span>N</a>
   <div class="nav-links">
@@ -269,7 +36,6 @@ body::after {
     <a href="/crawler.html" class="back-btn">← New crawl</a>
   </div>
 
-  <!-- Status card -->
   <div class="card">
     <div class="status-row">
       <span id="badge" class="badge badge-pending">pending</span>
@@ -278,13 +44,11 @@ body::after {
     <div class="meta" id="meta"></div>
   </div>
 
-  <!-- Log card -->
   <div class="card">
     <div class="card-title">Live Output</div>
     <div id="log">Waiting for job to start…</div>
   </div>
 
-  <!-- Results card -->
   <div class="card">
     <div class="card-title">Extracted Results</div>
     <div class="export-row" id="export-row" style="display:none">
@@ -301,123 +65,7 @@ body::after {
 
 </div>
 
-<script>
-// Canvas grain
-(function() {
-  const c = document.createElement('canvas');
-  c.width = 300; c.height = 300;
-  c.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;opacity:0.03;pointer-events:none;z-index:9997;mix-blend-mode:screen;';
-  const ctx = c.getContext('2d');
-  function grain() {
-    const img = ctx.createImageData(300,300);
-    for (let i=0;i<img.data.length;i+=4){const v=Math.random()*255;img.data[i]=img.data[i+1]=img.data[i+2]=v;img.data[i+3]=255;}
-    ctx.putImageData(img,0,0); requestAnimationFrame(grain);
-  }
-  grain(); document.body.appendChild(c);
-})();
-
-const jobId = new URLSearchParams(location.search).get("id");
-if (!jobId) location.href = "/";
-
-let logOffset = 0;
-let polling   = null;
-
-const badgeEl    = document.getElementById("badge");
-const statusText = document.getElementById("status-text");
-const metaEl     = document.getElementById("meta");
-const logEl      = document.getElementById("log");
-const resultsList= document.getElementById("results-list");
-const emptyEl    = document.getElementById("empty");
-const exportRow  = document.getElementById("export-row");
-
-document.getElementById("btn-download").href = `/api/jobs/${jobId}/download`;
-
-const BADGE_MAP = {
-  pending: ["badge-pending", "Waiting in queue…"],
-  running: ["badge-running", "Crawl in progress…"],
-  done:    ["badge-done",    "Operation complete"],
-  failed:  ["badge-failed",  "Operation failed"],
-};
-
-function esc(s) {
-  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-}
-
-function colorLog(line) {
-  if (/error|fail/i.test(line))                   return `<span style="color:#c0392b">${line}</span>`;
-  if (/warn/i.test(line))                         return `<span style="color:#f39c12">${line}</span>`;
-  if (/✓|done|success|graph|circuit/i.test(line)) return `<span style="color:#2ecc71">${line}</span>`;
-  return `<span style="color:#3a3a3a">${line}</span>`;
-}
-
-function renderPage(p) {
-  const isOnion = (p.baseHost ?? "").endsWith(".onion");
-  const terms   = p.matchedTerms ?? [];
-  const dls     = p.downloads ?? [];
-  const title   = p.meta?.title ?? p.url;
-  return `<div class="result-item">
-    <div class="result-title">${esc(title)}</div>
-    <div class="result-url">${esc(p.url)}</div>
-    <div class="result-meta">
-      ${isOnion ? '<span class="rbadge rb-onion">.onion</span>' : '<span class="rbadge rb-clear">clearnet</span>'}
-      ${terms.map(t => `<span class="rbadge rb-term">${esc(t)}</span>`).join("")}
-      ${dls.length ? `<span class="rbadge rb-dl">&#8659; ${dls.length} files</span>` : ""}
-    </div>
-  </div>`;
-}
-
-async function poll() {
-  try {
-    const job = await fetch(`/api/jobs/${jobId}`).then(r => r.json());
-
-    const [cls, text] = BADGE_MAP[job.status] ?? ["badge-pending", job.status];
-    badgeEl.className = `badge ${cls}`;
-    badgeEl.innerHTML = job.status === "running"
-      ? `<div class="dot-live"></div>${job.status}`
-      : job.status;
-    statusText.textContent = text;
-
-    metaEl.innerHTML = [
-      `<span>Target:</span> ${esc(job.url)}`,
-      job.search_terms ? `<span>Terms:</span> ${esc(job.search_terms)}` : "",
-      job.started_at   ? `<span>Started:</span> ${new Date(job.started_at).toLocaleTimeString()}` : "",
-      job.finished_at  ? `<span>Finished:</span> ${new Date(job.finished_at).toLocaleTimeString()}` : "",
-      job.page_count   ? `<span>Pages:</span> ${job.page_count}` : "",
-      job.error        ? `<span style="color:#c0392b">Error:</span> ${esc(job.error)}` : "",
-    ].filter(Boolean).join(" &nbsp;&middot;&nbsp; ");
-
-    const log     = job.log ?? "";
-    const newPart = log.slice(logOffset);
-    if (newPart) {
-      logOffset = log.length;
-      const atBottom = logEl.scrollHeight - logEl.scrollTop <= logEl.clientHeight + 20;
-      const lines = newPart.split("\n").filter(Boolean).map(colorLog).join("\n");
-      if (logEl.textContent === "Waiting for job to start…") logEl.innerHTML = "";
-      logEl.innerHTML += lines + "\n";
-      if (atBottom) logEl.scrollTop = logEl.scrollHeight;
-    }
-
-    if (job.status === "done" || job.status === "failed") {
-      clearInterval(polling);
-      if (job.status === "done") {
-        const r = await fetch(`/api/jobs/${jobId}/results`).then(res => res.json());
-        const pages = r.pages ?? [];
-        if (pages.length) {
-          emptyEl.style.display = "none";
-          exportRow.style.display = "flex";
-          resultsList.innerHTML = pages.map(renderPage).join("");
-        } else {
-          emptyEl.textContent = "No matching pages found.";
-        }
-      }
-    }
-  } catch (err) {
-    console.error(err);
-  }
-}
-
-poll();
-polling = setInterval(poll, 3000);
-</script>
+<script src="/js/grain.js"></script>
+<script src="/js/job.js"></script>
 </body>
 </html>

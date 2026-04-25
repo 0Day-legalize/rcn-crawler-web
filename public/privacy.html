@@ -1,200 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RCN — Privacy Policy</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;500;600&display=swap');
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --green:     #4ade80;
-      --green-dim: #166534;
-      --bg:        #0a0a0a;
-      --surface:   #111111;
-      --border:    rgba(255,255,255,0.07);
-      --border-h:  rgba(74,222,128,0.25);
-      --text:      #e2e8f0;
-      --text-sec:  #94a3b8;
-      --text-dim:  #64748b;
-    }
-
-    html { scrollbar-width: thin; scrollbar-color: #1e3a2a transparent; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', system-ui, sans-serif;
-      font-size: 15px;
-      line-height: 1.7;
-      min-height: 100vh;
-      padding: 48px 24px 80px;
-      max-width: 740px;
-      margin: 0 auto;
-      position: relative;
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: "";
-      position: fixed; inset: 0;
-      background: repeating-linear-gradient(
-        0deg, transparent, transparent 3px,
-        rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 4px
-      );
-      pointer-events: none; z-index: 100;
-    }
-    body::after {
-      content: "";
-      position: fixed; inset: 0;
-      background-image:
-        linear-gradient(rgba(74,222,128,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(74,222,128,0.03) 1px, transparent 1px);
-      background-size: 48px 48px;
-      pointer-events: none; z-index: 0;
-    }
-    * { position: relative; z-index: 1; }
-
-    header {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 40px; padding-bottom: 20px;
-      border-bottom: 1px solid var(--border);
-    }
-    .header-left { display: flex; align-items: center; gap: 14px; }
-    .header-left img { height: 30px; width: 30px; object-fit: contain; }
-    header h1 {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 16px; color: var(--green);
-      letter-spacing: 2px; text-transform: uppercase;
-    }
-    header a {
-      font-size: 13px; color: var(--text-dim); text-decoration: none;
-      border: 1px solid var(--border); padding: 7px 14px; border-radius: 6px;
-      transition: all 0.15s;
-    }
-    header a:hover { color: var(--text-sec); border-color: rgba(255,255,255,0.12); }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-top: 1px solid rgba(255,255,255,0.1);
-      border-radius: 8px; padding: 28px;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.03);
-    }
-
-    .card-title {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px; color: var(--green);
-      letter-spacing: 2px; text-transform: uppercase;
-      margin-bottom: 20px;
-      display: flex; align-items: center; gap: 10px;
-    }
-    .card-title::before { content: "//"; color: var(--green-dim); font-size: 13px; }
-    .card-title::after  { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
-
-    h2 { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 10px; }
-    p  { color: var(--text-sec); margin-bottom: 14px; }
-    ul { color: var(--text-sec); padding-left: 20px; margin-bottom: 14px; }
-    li { margin-bottom: 6px; }
-
-    .section { margin-bottom: 28px; }
-    .section:last-child { margin-bottom: 0; }
-
-    a { color: var(--green); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-
-    .highlight {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 13px; color: var(--green);
-      background: rgba(74,222,128,0.05);
-      border: 1px solid rgba(74,222,128,0.15);
-      border-radius: 4px; padding: 10px 14px;
-      margin-bottom: 14px; display: block;
-    }
-
-    footer { text-align: center; margin-top: 52px; font-size: 12px; color: var(--text-dim); }
-    footer a { color: var(--text-dim); }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RCN — Privacy Policy</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/shared.css">
+<link rel="stylesheet" href="/css/privacy.css">
 </head>
 <body>
 
-<header>
-  <div class="header-left">
-    <img src="/logo.png" alt="RCN">
-    <h1>// Privacy Policy</h1>
-  </div>
-  <a href="/">&#8592; Back</a>
-</header>
+<div class="page-glow"></div>
 
-<div class="card">
-  <div class="card-title">Overview</div>
+<nav class="nav">
+  <a href="/" class="nav-logo">R<span>C</span>N</a>
+  <div class="nav-links">
+    <a href="/" class="nav-link">Home</a>
+    <a href="/#projects" class="nav-link">Projects</a>
+    <a href="/contact.html" class="nav-link">Contact</a>
+  </div>
+  <div class="nav-right">
+    <a href="/" class="nav-back">← Back</a>
+  </div>
+</nav>
 
-  <div class="section">
-    <p>RCN WebCrawler is a personal, non-commercial research project. This policy explains what limited data is collected when you use this service and why.</p>
-    <p>Last updated: April 2026</p>
+<div class="page">
+
+  <div class="page-eyebrow">// legal</div>
+  <div class="page-title">Privacy<span>.</span></div>
+  <div class="page-divider"></div>
+
+  <div class="card">
+    <div class="card-title">Overview</div>
+    <div class="section">
+      <p>RCN WebCrawler is a personal, non-commercial research project. This policy explains what limited data is collected when you use this service and why.</p>
+      <p>Last updated: April 2026</p>
+    </div>
+
+    <div class="section">
+      <h2>1. Who is responsible</h2>
+      <p>This service is operated as a private, non-commercial research project.</p>
+      <span class="highlight">Contact: <a href="mailto:sebastian@se-rcn.com">sebastian@se-rcn.com</a></span>
+      <p>For any data-related requests, questions, or complaints, contact the address above.</p>
+    </div>
+
+    <div class="section">
+      <h2>2. What data is collected</h2>
+      <p>When you submit a crawl job, the following data is stored temporarily:</p>
+      <ul>
+        <li><strong>IP address</strong> — used to enforce rate limits and prevent abuse</li>
+        <li><strong>Submitted URL</strong> — the seed URL you provide for crawling</li>
+        <li><strong>Job metadata</strong> — timestamps, status, page count</li>
+      </ul>
+      <p>No cookies are set. No tracking scripts are used. No data is sold or shared with third parties.</p>
+    </div>
+
+    <div class="section">
+      <h2>3. Legal basis for processing</h2>
+      <p>Processing of IP addresses is based on <strong>Art. 6(1)(f) GDPR — legitimate interest</strong>: preventing abuse, enforcing rate limits, and ensuring the service is not used for unlawful purposes.</p>
+    </div>
+
+    <div class="section">
+      <h2>4. How long data is retained</h2>
+      <ul>
+        <li><strong>Crawl results and logs</strong> — automatically deleted 1 hour after the job completes</li>
+        <li><strong>Job metadata (IP, URL, timestamps)</strong> — retained for up to 30 days, then deleted</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>5. Your rights under GDPR</h2>
+      <p>You have the right to:</p>
+      <ul>
+        <li>Request access to data held about you (Art. 15 GDPR)</li>
+        <li>Request deletion of your data (Art. 17 GDPR)</li>
+        <li>Object to processing (Art. 21 GDPR)</li>
+        <li>Lodge a complaint with a supervisory authority</li>
+      </ul>
+      <p>To exercise any of these rights, contact: <a href="mailto:sebastian@se-rcn.com">sebastian@se-rcn.com</a></p>
+    </div>
+
+    <div class="section">
+      <h2>6. Third-party services</h2>
+      <p>This page loads fonts from Google Fonts (fonts.googleapis.com). Google may log your IP when serving these fonts. See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's privacy policy</a> for details.</p>
+      <p>All crawl traffic is routed through the Tor network. No crawl data is transmitted to or stored by third parties.</p>
+    </div>
+
+    <div class="section">
+      <h2>7. Changes to this policy</h2>
+      <p>This policy may be updated occasionally. Continued use of the service after changes constitutes acceptance of the updated policy.</p>
+    </div>
   </div>
 
-  <div class="section">
-    <h2>1. Who is responsible</h2>
-    <p>This service is operated as a private, non-commercial research project.</p>
-    <span class="highlight">Contact: <a href="mailto:sebastian@se-rcn.com">sebastian@se-rcn.com</a></span>
-    <p>For any data-related requests, questions, or complaints, contact the address above.</p>
+  <div class="page-footer">
+    <span>© 2026 RCN</span>
+    <span><a href="/">Home</a> &nbsp;·&nbsp; For research use only</span>
   </div>
 
-  <div class="section">
-    <h2>2. What data is collected</h2>
-    <p>When you submit a crawl job, the following data is stored temporarily:</p>
-    <ul>
-      <li><strong>IP address</strong> — used to enforce rate limits (max 5 jobs/hour) and prevent abuse</li>
-      <li><strong>Submitted URL</strong> — the seed URL you provide for crawling</li>
-      <li><strong>Job metadata</strong> — timestamps, status, page count</li>
-    </ul>
-    <p>No cookies are set. No tracking scripts are used. No data is sold or shared with third parties.</p>
-  </div>
-
-  <div class="section">
-    <h2>3. Legal basis for processing</h2>
-    <p>Processing of IP addresses is based on <strong>Art. 6(1)(f) GDPR — legitimate interest</strong>: preventing abuse, enforcing rate limits, and ensuring the service is not used for unlawful purposes.</p>
-  </div>
-
-  <div class="section">
-    <h2>4. How long data is retained</h2>
-    <ul>
-      <li><strong>Crawl results and logs</strong> — automatically deleted 1 hour after the job completes</li>
-      <li><strong>Job metadata (IP, URL, timestamps)</strong> — retained for up to 30 days for abuse prevention, then deleted</li>
-    </ul>
-  </div>
-
-  <div class="section">
-    <h2>5. Your rights under GDPR</h2>
-    <p>You have the right to:</p>
-    <ul>
-      <li>Request access to data held about you (Art. 15 GDPR)</li>
-      <li>Request deletion of your data (Art. 17 GDPR)</li>
-      <li>Object to processing (Art. 21 GDPR)</li>
-      <li>Lodge a complaint with a supervisory authority</li>
-    </ul>
-    <p>To exercise any of these rights, contact: <a href="mailto:sebastian@se-rcn.com">sebastian@se-rcn.com</a></p>
-  </div>
-
-  <div class="section">
-    <h2>6. Third-party services</h2>
-    <p>This page loads fonts from Google Fonts (fonts.googleapis.com). Google may log your IP when serving these fonts. See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's privacy policy</a> for details.</p>
-    <p>All crawl traffic is routed through the Tor network. No crawl data is transmitted to or stored by third parties.</p>
-  </div>
-
-  <div class="section">
-    <h2>7. Changes to this policy</h2>
-    <p>This policy may be updated occasionally. Continued use of the service after changes constitutes acceptance of the updated policy.</p>
-  </div>
 </div>
 
-<footer>
-  RCN &nbsp;&middot;&nbsp; <a href="/">Home</a> &nbsp;&middot;&nbsp; for research use only
-</footer>
-
+<script src="/js/grain.js"></script>
 </body>
 </html>
