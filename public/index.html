@@ -364,6 +364,48 @@ body::after {
 }
 .placeholder-card:hover { border-color:#333; color:#555; }
 
+.project-card-sm {
+  background:#0a0a0a; border:1px solid rgba(192,57,43,0.15); border-radius:2px;
+  display:flex; flex-direction:column; min-height:200px;
+  overflow:hidden; transition:border-color 0.25s;
+  box-shadow:0 0 40px rgba(0,0,0,0.6);
+}
+.project-card-sm:hover { border-color:#c0392b; }
+.project-card-sm-header {
+  padding:20px 20px 14px;
+  border-bottom:1px solid rgba(192,57,43,0.1);
+  background:linear-gradient(135deg, #0d0404, #080808);
+}
+.project-card-sm-eyebrow {
+  font-family:'Special Elite',serif; font-size:10px;
+  color:#555; letter-spacing:0.14em; text-transform:uppercase; margin-bottom:8px;
+}
+.project-card-sm-title {
+  font-family:'Special Elite',serif; font-size:17px;
+  color:#c0392b; letter-spacing:0.06em; text-transform:uppercase; line-height:1.2;
+}
+.project-card-sm-body {
+  padding:14px 20px 20px; flex:1; display:flex; flex-direction:column; gap:10px;
+}
+.project-card-sm-desc {
+  font-family:'Caveat',cursive; font-size:14px; color:#555; line-height:1.5; flex:1;
+}
+.project-card-sm-footer {
+  display:flex; align-items:center; justify-content:space-between;
+  padding-top:10px; border-top:1px solid #111;
+}
+.project-card-sm-lang {
+  font-family:'Special Elite',serif; font-size:10px;
+  color:#333; letter-spacing:0.12em; text-transform:uppercase;
+}
+.project-card-sm-status {
+  font-family:'Special Elite',serif; font-size:10px;
+  color:#f39c12; letter-spacing:0.1em; text-transform:uppercase;
+  display:flex; align-items:center; gap:5px;
+}
+.status-dot-amber { width:5px; height:5px; border-radius:50%; background:#f39c12; animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
 /* ── CTA ── */
 .cta-section {
   background:radial-gradient(ellipse 70% 80% at 50% 50%, rgba(60,0,0,0.55) 0%, transparent 70%), #030303;
@@ -516,18 +558,40 @@ body::after {
   </div>
 
   <div class="projects-grid reveal">
+
+    <div class="project-card-sm">
+      <div class="project-card-sm-header">
+        <div class="project-card-sm-eyebrow">[ Malware Research ]</div>
+        <div class="project-card-sm-title">Polymorphic<br/>Ransomware</div>
+      </div>
+      <div class="project-card-sm-body">
+        <div class="project-card-sm-desc">Educational snippets demonstrating how polymorphic ransomware mutates its own code to evade signature-based detection. Built to understand the mechanics — not to deploy.</div>
+        <div class="project-card-sm-footer">
+          <span class="project-card-sm-lang">Written in C</span>
+          <span class="project-card-sm-status"><div class="status-dot-amber"></div>In Progress</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card-sm">
+      <div class="project-card-sm-header">
+        <div class="project-card-sm-eyebrow">[ Defensive Security ]</div>
+        <div class="project-card-sm-title">High Interaction<br/>Honeypot</div>
+      </div>
+      <div class="project-card-sm-body">
+        <div class="project-card-sm-desc">A high-interaction honeypot that emulates real services to capture attacker behaviour, TTPs, and payloads. Designed for threat intelligence and intrusion analysis.</div>
+        <div class="project-card-sm-footer">
+          <span class="project-card-sm-lang">Written in Go</span>
+          <span class="project-card-sm-status"><div class="status-dot-amber"></div>In Progress</span>
+        </div>
+      </div>
+    </div>
+
     <div class="placeholder-card">
       <div style="font-size:22px;color:#1f1f1f;">+</div>
       <div>project coming soon</div>
     </div>
-    <div class="placeholder-card">
-      <div style="font-size:22px;color:#1f1f1f;">+</div>
-      <div>project coming soon</div>
-    </div>
-    <div class="placeholder-card">
-      <div style="font-size:22px;color:#1f1f1f;">+</div>
-      <div>project coming soon</div>
-    </div>
+
   </div>
 </section>
 
