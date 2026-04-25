@@ -20,9 +20,9 @@
 
 .section { margin-bottom:28px; }
 .section:last-child { margin-bottom:0; }
-h2 { font-family:'Special Elite',serif; font-size:14px; color:#aaa; margin-bottom:10px; letter-spacing:0.08em; text-transform:uppercase; }
-p  { font-family:'Caveat',cursive; font-size:15px; color:#555; margin-bottom:14px; line-height:1.7; }
-ul { font-family:'Caveat',cursive; font-size:15px; color:#555; padding-left:20px; margin-bottom:14px; }
+h2 { font-family:'Special Elite',serif; font-size:14px; color:#ddd; margin-bottom:10px; letter-spacing:0.08em; text-transform:uppercase; }
+p  { font-family:'Caveat',cursive; font-size:15px; color:#bbb; margin-bottom:14px; line-height:1.7; }
+ul { font-family:'Caveat',cursive; font-size:15px; color:#bbb; padding-left:20px; margin-bottom:14px; }
 li { margin-bottom:6px; }
 a  { color:#c0392b; text-decoration:none; }
 a:hover { text-decoration:underline; }

@@ -16,10 +16,10 @@
 .page-header { text-align:center; padding:48px 0 40px; border-bottom:1px solid rgba(192,57,43,0.15); margin-bottom:40px; animation:fadeUp 0.7s 0.2s both; }
 .logo-wrap { display:inline-flex; align-items:center; justify-content:center; width:80px; height:80px; border-radius:12px; border:1px solid rgba(192,57,43,0.3); background:rgba(192,57,43,0.04); margin-bottom:20px; box-shadow:0 0 40px rgba(192,57,43,0.1), inset 0 0 20px rgba(192,57,43,0.03); }
 .logo-wrap img { height:50px; width:50px; object-fit:contain; }
-.page-eyebrow { font-family:'Special Elite',serif; font-size:11px; color:#555; letter-spacing:0.2em; text-transform:uppercase; margin-bottom:12px; animation:fadeIn 0.6s 0.2s both; }
+.page-eyebrow { font-family:'Special Elite',serif; font-size:11px; color:#aaa; letter-spacing:0.2em; text-transform:uppercase; margin-bottom:12px; animation:fadeIn 0.6s 0.2s both; }
 .page-title { font-family:'Special Elite',serif; font-size:42px; color:#fff; letter-spacing:0.08em; text-transform:uppercase; animation:titlePulse 4s ease-in-out infinite; margin-bottom:8px; }
 .page-title span { color:#c0392b; }
-.page-sub { font-family:'Special Elite',serif; font-size:14px; color:#444; letter-spacing:0.08em; }
+.page-sub { font-family:'Special Elite',serif; font-size:14px; color:#999; letter-spacing:0.08em; }
 
 .warn-stripe { font-family:'Special Elite',serif; font-size:12px; color:#c0392b; background:#080303; border:1px solid rgba(192,57,43,0.2); border-radius:2px; padding:10px 16px; text-align:center; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:28px; animation:fadeUp 0.6s 0.4s both; }
 
@@ -33,12 +33,12 @@
 .card-title::after  { content:''; flex:1; height:1px; background:linear-gradient(90deg, rgba(192,57,43,0.2), transparent); }
 
 .field { margin-bottom:22px; }
-.field-label { font-family:'Special Elite',serif; font-size:11px; color:#666; letter-spacing:0.15em; text-transform:uppercase; display:block; margin-bottom:10px; }
+.field-label { font-family:'Special Elite',serif; font-size:11px; color:#aaa; letter-spacing:0.15em; text-transform:uppercase; display:block; margin-bottom:10px; }
 .field-label em { color:#333; font-style:normal; }
 
 input[type="text"] { width:100%; background:#050505; border:1px solid #1a1a1a; border-radius:1px; padding:12px 16px; color:#ccc; font-size:15px; font-family:'Special Elite',serif; letter-spacing:0.04em; outline:none; caret-color:#c0392b; transition:border-color 0.2s, box-shadow 0.2s; }
 input[type="text"]:focus { border-color:rgba(192,57,43,0.5); box-shadow:0 0 0 3px rgba(192,57,43,0.06), 0 0 16px rgba(192,57,43,0.06); }
-input[type="text"]::placeholder { color:#2a2a2a; }
+input[type="text"]::placeholder { color:#666; }
 
 .toggle-row { display:flex; align-items:center; gap:14px; margin-bottom:22px; }
 .toggle { position:relative; width:44px; height:24px; flex-shrink:0; }
@@ -47,15 +47,15 @@ input[type="text"]::placeholder { color:#2a2a2a; }
 .slider::before { content:''; position:absolute; width:16px; height:16px; left:3px; top:3px; background:#333; border-radius:50%; transition:transform 0.2s, background 0.2s; }
 .toggle input:checked + .slider { background:rgba(192,57,43,0.1); border-color:rgba(192,57,43,0.4); }
 .toggle input:checked + .slider::before { transform:translateX(20px); background:#c0392b; }
-.toggle-label { font-family:'Special Elite',serif; font-size:13px; color:#555; letter-spacing:0.04em; }
+.toggle-label { font-family:'Special Elite',serif; font-size:13px; color:#aaa; letter-spacing:0.04em; }
 
-.tos-box { background:#030303; border:1px solid #111; border-radius:1px; padding:16px 18px; max-height:200px; overflow-y:auto; font-family:'Caveat',cursive; font-size:14px; line-height:1.8; color:#3a3a3a; margin-bottom:16px; scrollbar-width:thin; scrollbar-color:#1a0808 transparent; }
-.tos-box h3 { font-family:'Special Elite',serif; color:#555; font-size:11px; margin-bottom:8px; letter-spacing:0.15em; text-transform:uppercase; }
+.tos-box { background:#030303; border:1px solid #111; border-radius:1px; padding:16px 18px; max-height:200px; overflow-y:auto; font-family:'Caveat',cursive; font-size:14px; line-height:1.8; color:#999; margin-bottom:16px; scrollbar-width:thin; scrollbar-color:#1a0808 transparent; }
+.tos-box h3 { font-family:'Special Elite',serif; color:#aaa; font-size:11px; margin-bottom:8px; letter-spacing:0.15em; text-transform:uppercase; }
 .tos-box h4 { font-family:'Special Elite',serif; color:#333; font-size:11px; margin:10px 0 4px; letter-spacing:0.1em; }
 .tos-box ul { padding-left:16px; }
 .tos-box li { margin-bottom:3px; }
 
-.tos-accept { display:flex; align-items:center; gap:10px; font-family:'Special Elite',serif; font-size:13px; color:#555; margin-bottom:22px; cursor:pointer; letter-spacing:0.04em; }
+.tos-accept { display:flex; align-items:center; gap:10px; font-family:'Special Elite',serif; font-size:13px; color:#aaa; margin-bottom:22px; cursor:pointer; letter-spacing:0.04em; }
 .tos-accept input { width:14px; height:14px; cursor:pointer; accent-color:#c0392b; }
 
 .btn-primary { height:44px; background:#c0392b; border-radius:2px; padding:0 32px; display:inline-flex; align-items:center; font-family:'Special Elite',serif; font-size:14px; color:#fff; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; border:none; box-shadow:0 0 16px rgba(192,57,43,0.5); transition:background 0.2s, box-shadow 0.2s; }
@@ -67,12 +67,12 @@ input[type="text"]::placeholder { color:#2a2a2a; }
 .steps { display:flex; flex-direction:column; gap:20px; }
 .step { display:flex; gap:18px; align-items:flex-start; }
 .step-num { font-family:'Special Elite',serif; width:32px; height:32px; border-radius:1px; flex-shrink:0; background:#0d0505; border:1px solid rgba(192,57,43,0.25); color:#c0392b; font-size:13px; letter-spacing:0.06em; display:flex; align-items:center; justify-content:center; }
-.step-text { font-family:'Caveat',cursive; font-size:16px; color:#555; line-height:1.6; padding-top:4px; }
-.step-text strong { color:#888; }
+.step-text { font-family:'Caveat',cursive; font-size:16px; color:#aaa; line-height:1.6; padding-top:4px; }
+.step-text strong { color:#ccc; }
 
 .page-footer { text-align:center; margin-top:60px; padding-top:24px; border-top:1px solid rgba(192,57,43,0.08); font-family:'Caveat',cursive; font-size:13px; color:#333; }
 .page-footer a { color:#333; text-decoration:none; transition:color 0.2s; }
 .page-footer a:hover { color:#c0392b; }
 .footer-note { margin-top:8px; font-size:13px; }
-.footer-note a { color:#2a2a2a; text-decoration:underline; text-underline-offset:3px; }
-.footer-note a:hover { color:#555; }
+.footer-note a { color:#666; text-decoration:underline; text-underline-offset:3px; }
+.footer-note a:hover { color:#aaa; }

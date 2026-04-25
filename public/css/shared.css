@@ -79,7 +79,7 @@ body::after {
 .nav-back {
   height:32px; border:1px solid #2a2a2a; border-radius:2px;
   padding:0 18px; display:flex; align-items:center;
-  font-family:'Caveat',cursive; font-size:13px; color:#888;
+  font-family:'Caveat',cursive; font-size:13px; color:#bbb;
   text-decoration:none; transition:border-color 0.2s, color 0.2s;
 }
 .nav-back:hover { border-color:#c0392b; color:#fff; }
@@ -160,14 +160,14 @@ body::after {
   border-radius:2px; padding:28px 32px; margin-bottom:40px;
   animation:fadeUp 0.6s 0.5s both;
 }
-.intro-card p { font-family:'Special Elite',serif; font-size:16px; color:#aaa; line-height:1.8; letter-spacing:0.03em; }
+.intro-card p { font-family:'Special Elite',serif; font-size:16px; color:#ccc; line-height:1.8; letter-spacing:0.03em; }
 .intro-card p strong { color:#fff; }
 .intro-card p em { color:#c0392b; font-style:normal; }
 
 /* ── SECTION LABEL ── */
 .section-label {
   font-family:'Special Elite',serif; font-size:11px;
-  color:#555; letter-spacing:0.2em; text-transform:uppercase;
+  color:#999; letter-spacing:0.2em; text-transform:uppercase;
   margin-bottom:16px; display:flex; align-items:center; gap:12px;
 }
 .section-label::after { content:''; flex:1; height:1px; background:#1a1a1a; }
@@ -177,7 +177,7 @@ body::after {
   margin-top:60px; padding-top:20px;
   border-top:1px solid rgba(192,57,43,0.08);
   display:flex; justify-content:space-between; align-items:center;
-  font-family:'Caveat',cursive; font-size:13px; color:#333;
+  font-family:'Caveat',cursive; font-size:13px; color:#bbb;
 }
-.page-footer a { color:#333; text-decoration:none; transition:color 0.2s; }
+.page-footer a { color:#bbb; text-decoration:none; transition:color 0.2s; }
 .page-footer a:hover { color:#c0392b; }
