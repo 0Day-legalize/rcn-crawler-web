@@ -134,7 +134,7 @@
 .project-card-eyebrow { font-family:'Special Elite',serif; font-size:11px; color:#aaa; letter-spacing:0.12em; text-transform:uppercase; }
 .project-card-title { font-family:'Special Elite',serif; font-size:28px; color:#c0392b; letter-spacing:0.06em; text-transform:uppercase; }
 .project-features { display:flex; flex-direction:column; gap:6px; margin-top:4px; }
-.feature-line { display:flex; align-items:center; gap:10px; font-family:'Caveat',cursive; font-size:14px; color:#bbb; }
+.feature-line { display:flex; align-items:center; gap:10px; font-family:'Caveat',cursive; font-size:14px; color:#fff; }
 .feature-arrow { color:#c0392b; }
 .status-row { display:flex; align-items:center; gap:8px; font-family:'Special Elite',serif; font-size:11px; color:#aaa; letter-spacing:0.1em; text-transform:uppercase; margin-top:4px; }
 .status-dot { width:6px; height:6px; border-radius:50%; background:#2ecc71; flex-shrink:0; animation:float 2s infinite; }
@@ -156,7 +156,7 @@
 .project-card-sm-eyebrow { font-family:'Special Elite',serif; font-size:10px; color:#aaa; letter-spacing:0.14em; text-transform:uppercase; margin-bottom:8px; }
 .project-card-sm-title { font-family:'Special Elite',serif; font-size:17px; color:#c0392b; letter-spacing:0.06em; text-transform:uppercase; line-height:1.2; }
 .project-card-sm-body { padding:14px 20px 20px; flex:1; display:flex; flex-direction:column; gap:10px; }
-.project-card-sm-desc { font-family:'Caveat',cursive; font-size:14px; color:#aaa; line-height:1.5; flex:1; }
+.project-card-sm-desc { font-family:'Caveat',cursive; font-size:14px; color:#fff; line-height:1.5; flex:1; }
 .project-card-sm-footer { display:flex; align-items:center; justify-content:space-between; padding-top:10px; border-top:1px solid #111; }
 .project-card-sm-lang { font-family:'Special Elite',serif; font-size:10px; color:#ccc; letter-spacing:0.12em; text-transform:uppercase; }
 .project-card-sm-status { font-family:'Special Elite',serif; font-size:10px; color:#f39c12; letter-spacing:0.1em; text-transform:uppercase; display:flex; align-items:center; gap:5px; }
