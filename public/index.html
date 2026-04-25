@@ -67,8 +67,8 @@ body::after {
 }
 @keyframes float    { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-12px); } }
 @keyframes logoPulse {
-  0%,100% { text-shadow:0 0 12px rgba(192,57,43,0.8),0 0 30px rgba(192,57,43,0.4); }
-  50%      { text-shadow:0 0 20px rgba(192,57,43,1),0 0 50px rgba(192,57,43,0.6); }
+  0%,100% { text-shadow:0 0 14px rgba(255,255,255,0.6),0 0 30px rgba(255,255,255,0.2); }
+  50%      { text-shadow:0 0 20px rgba(255,255,255,0.9),0 0 50px rgba(255,255,255,0.35); }
 }
 @keyframes navSlideDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
 
@@ -137,9 +137,10 @@ body::after {
 .nav-logo {
   font-family:'Special Elite',serif; font-size:20px; color:#fff;
   letter-spacing:0.14em; text-decoration:none; flex-shrink:0;
+  text-shadow:0 0 14px rgba(255,255,255,0.6), 0 0 30px rgba(255,255,255,0.2);
   animation:logoPulse 3s ease-in-out infinite;
 }
-.nav-logo span { color:#c0392b; text-shadow:0 0 16px rgba(192,57,43,1),0 0 40px rgba(192,57,43,0.6); }
+.nav-logo span { color:#ff2a2a; text-shadow:0 0 16px rgba(255,42,42,1),0 0 40px rgba(255,42,42,0.8), 0 0 60px rgba(255,42,42,0.4); }
 .nav-links { display:flex; gap:28px; align-items:center; animation:fadeIn 0.8s 0.4s both; }
 .nav-link {
   font-family:'Caveat',cursive; font-size:15px; color:#fff;
@@ -157,14 +158,14 @@ body::after {
 }
 .nav-social:hover { border-color:#c0392b; }
 .nav-cta {
-  height:32px; background:#c0392b; border-radius:2px;
+  height:32px; background:#e8281e; border-radius:2px;
   padding:0 18px; display:flex; align-items:center;
   font-family:'Caveat',cursive; font-size:13px; color:#fff;
   text-decoration:none; letter-spacing:0.04em;
   transition:background 0.2s, box-shadow 0.2s;
-  box-shadow:0 0 12px rgba(192,57,43,0.7),0 0 30px rgba(192,57,43,0.3);
+  box-shadow:0 0 14px rgba(232,40,30,0.9), 0 0 32px rgba(232,40,30,0.5), 0 0 60px rgba(232,40,30,0.2);
 }
-.nav-cta:hover { background:#a93226; box-shadow:0 0 20px rgba(192,57,43,1),0 0 50px rgba(192,57,43,0.5); }
+.nav-cta:hover { background:#ff3328; box-shadow:0 0 20px rgba(255,51,40,1), 0 0 50px rgba(255,51,40,0.7), 0 0 80px rgba(255,51,40,0.3); }
 
 /* ── HERO ── */
 .hero {
