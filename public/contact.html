@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RCN — Contact</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: #050505; color: #fff; font-family: 'Caveat', cursive; overflow-x: hidden; min-height: 100vh; }
+
+/* grain */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat; background-size: 200px 200px;
+}
+
+/* vignette */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 9998; pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.75) 100%);
+}
+
+@keyframes fadeUp   { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn   { from { opacity:0; } to { opacity:1; } }
+@keyframes logoPulse {
+  0%,100% { text-shadow:0 0 12px rgba(192,57,43,0.8),0 0 30px rgba(192,57,43,0.4); }
+  50%      { text-shadow:0 0 20px rgba(192,57,43,1),0 0 50px rgba(192,57,43,0.6); }
+}
+@keyframes navSlideDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+@keyframes scanline {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+.reveal { opacity:0; transform:translateY(24px); transition:opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity:1; transform:none; }
+
+/* ── NAV ── */
+.nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  height:56px; background:rgba(20,20,20,0.97);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(192,57,43,0.35);
+  display:flex; align-items:center; padding:0 48px; gap:32px;
+  animation:navSlideDown 0.6s ease both;
+}
+.nav-logo {
+  font-family:'Special Elite',serif; font-size:20px; color:#fff;
+  letter-spacing:0.14em; text-decoration:none; flex-shrink:0;
+  animation:logoPulse 3s ease-in-out infinite;
+}
+.nav-logo span { color:#c0392b; }
+.nav-links { display:flex; gap:28px; align-items:center; }
+.nav-link {
+  font-family:'Caveat',cursive; font-size:15px; color:#fff;
+  text-decoration:none; letter-spacing:0.04em;
+  text-shadow:0 0 10px rgba(255,255,255,0.5);
+  transition:text-shadow 0.2s;
+}
+.nav-link:hover { text-shadow:0 0 16px rgba(255,255,255,1),0 0 40px rgba(255,255,255,0.5); }
+.nav-right { margin-left:auto; }
+.nav-back {
+  height:32px; border:1px solid #2a2a2a; border-radius:2px;
+  padding:0 18px; display:flex; align-items:center;
+  font-family:'Caveat',cursive; font-size:13px; color:#888;
+  text-decoration:none; transition:border-color 0.2s, color 0.2s;
+}
+.nav-back:hover { border-color:#c0392b; color:#fff; }
+
+@media (max-width:768px) {
+  .nav { padding:0 20px; }
+  .nav-links { display:none; }
+  .page { padding:100px 24px 60px; }
+  .contact-grid { grid-template-columns:1fr !important; }
+  .lang-grid { grid-template-columns:1fr 1fr !important; }
+}
+
+/* ── PAGE ── */
+.page {
+  position:relative; z-index:1;
+  max-width:900px; margin:0 auto;
+  padding:100px 48px 80px;
+}
+
+/* glow bg */
+.page-glow {
+  position:fixed; top:0; left:50%; transform:translateX(-50%);
+  width:800px; height:500px; pointer-events:none; z-index:0;
+  background:radial-gradient(ellipse at 50% 30%, rgba(80,0,0,0.2) 0%, transparent 70%);
+}
+
+/* ── HEADER ── */
+.page-eyebrow {
+  font-family:'Special Elite',serif; font-size:11px;
+  color:#c0392b; letter-spacing:0.2em; text-transform:uppercase;
+  margin-bottom:14px; animation:fadeIn 0.6s 0.2s both;
+}
+.page-title {
+  font-family:'Special Elite',serif; font-size:56px;
+  color:#fff; line-height:1; letter-spacing:0.04em;
+  margin-bottom:8px; animation:fadeUp 0.7s 0.3s both;
+}
+.page-title span { color:#c0392b; }
+.page-divider {
+  width:100%; height:1px;
+  background:linear-gradient(90deg, #c0392b, #2a2a2a, transparent);
+  margin:24px 0 48px; animation:fadeIn 0.6s 0.5s both;
+}
+
+/* ── INTRO CARD ── */
+.intro-card {
+  background:#0a0a0a;
+  border:1px solid rgba(192,57,43,0.2);
+  border-left:3px solid #c0392b;
+  border-radius:2px;
+  padding:28px 32px;
+  margin-bottom:32px;
+  animation:fadeUp 0.6s 0.5s both;
+}
+.intro-card p {
+  font-family:'Special Elite',serif;
+  font-size:17px; color:#aaa; line-height:1.8; letter-spacing:0.03em;
+}
+.intro-card p strong { color:#fff; }
+.intro-card p em { color:#c0392b; font-style:normal; }
+
+/* ── CONTACT GRID ── */
+.contact-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:20px; margin-bottom:32px;
+}
+
+.contact-card {
+  background:#0a0a0a;
+  border:1px solid #1a1a1a;
+  border-radius:2px; padding:24px 28px;
+  transition:border-color 0.2s;
+  animation:fadeUp 0.6s 0.7s both;
+}
+.contact-card:hover { border-color:rgba(192,57,43,0.4); }
+.contact-card-label {
+  font-family:'Special Elite',serif; font-size:10px;
+  color:#555; letter-spacing:0.2em; text-transform:uppercase;
+  margin-bottom:12px;
+}
+.contact-card-value {
+  font-family:'Special Elite',serif; font-size:18px;
+  color:#fff; letter-spacing:0.04em; word-break:break-all;
+}
+.contact-card-value a {
+  color:#c0392b; text-decoration:none;
+  transition:text-shadow 0.2s;
+}
+.contact-card-value a:hover {
+  text-shadow:0 0 16px rgba(192,57,43,0.8);
+}
+.contact-card-sub {
+  font-size:13px; color:#444; margin-top:8px; line-height:1.5;
+}
+
+/* ── STACK SECTION ── */
+.section-label {
+  font-family:'Special Elite',serif; font-size:11px;
+  color:#555; letter-spacing:0.2em; text-transform:uppercase;
+  margin-bottom:16px; display:flex; align-items:center; gap:12px;
+}
+.section-label::after { content:''; flex:1; height:1px; background:#1a1a1a; }
+
+.lang-grid {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  gap:14px; margin-bottom:32px;
+}
+.lang-card {
+  background:#0a0a0a; border:1px solid #1a1a1a;
+  border-radius:2px; padding:20px 16px;
+  display:flex; flex-direction:column; gap:8px;
+  transition:border-color 0.2s, background 0.2s;
+  animation:fadeUp 0.6s 0.9s both;
+}
+.lang-card:hover { border-color:#c0392b; background:#0d0505; }
+.lang-icon { font-size:22px; line-height:1; }
+.lang-name {
+  font-family:'Special Elite',serif; font-size:16px;
+  color:#fff; letter-spacing:0.06em;
+}
+.lang-level {
+  font-family:'Caveat',cursive; font-size:12px;
+  letter-spacing:0.1em; text-transform:uppercase;
+}
+.lang-level.active { color:#2ecc71; }
+.lang-level.learning { color:#f39c12; }
+.lang-bar { height:2px; background:#1a1a1a; border-radius:1px; margin-top:4px; overflow:hidden; }
+.lang-bar-fill { height:100%; border-radius:1px; transition:width 1s ease; }
+.lang-bar-fill.full { background:#c0392b; }
+.lang-bar-fill.mid  { background:#f39c12; }
+
+/* ── WHAT I BUILD ── */
+.tags-row { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:32px; animation:fadeUp 0.6s 1.1s both; }
+.tag {
+  font-family:'Special Elite',serif; font-size:12px;
+  color:#888; letter-spacing:0.1em; text-transform:uppercase;
+  border:1px solid #1f1f1f; border-radius:1px;
+  padding:6px 14px; transition:border-color 0.2s, color 0.2s;
+}
+.tag:hover { border-color:#c0392b; color:#c0392b; }
+.tag.red { border-color:rgba(192,57,43,0.3); color:#c0392b; }
+
+/* ── CTA BOX ── */
+.cta-box {
+  background:radial-gradient(ellipse at 50% 0%, rgba(60,0,0,0.4) 0%, transparent 70%), #080808;
+  border:1px solid rgba(192,57,43,0.25); border-radius:2px;
+  padding:36px 32px; text-align:center;
+  animation:fadeUp 0.6s 1.2s both;
+}
+.cta-box p {
+  font-family:'Special Elite',serif; font-size:15px;
+  color:#666; letter-spacing:0.04em; line-height:1.7; margin-bottom:20px;
+}
+.cta-box p strong { color:#aaa; }
+.btn-primary {
+  display:inline-flex; align-items:center; gap:10px;
+  height:44px; background:#c0392b; border-radius:2px;
+  padding:0 32px;
+  font-family:'Special Elite',serif; font-size:14px; color:#fff;
+  text-decoration:none; letter-spacing:0.08em; text-transform:uppercase;
+  transition:background 0.2s; box-shadow:0 0 20px rgba(192,57,43,0.4);
+}
+.btn-primary:hover { background:#a93226; }
+
+/* cursor blink */
+.cursor { display:inline-block; width:3px; height:44px; background:#c0392b; vertical-align:middle; margin-left:6px; animation:blink 1s step-end infinite; }
+
+/* ── FOOTER ── */
+.page-footer {
+  margin-top:60px; padding-top:20px;
+  border-top:1px solid #111;
+  display:flex; justify-content:space-between; align-items:center;
+  font-family:'Caveat',cursive; font-size:12px; color:#333;
+  animation:fadeIn 0.6s 1.3s both;
+}
+.page-footer a { color:#333; text-decoration:none; transition:color 0.2s; }
+.page-footer a:hover { color:#c0392b; }
+</style>
+</head>
+<body>
+
+<div class="page-glow"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="/" class="nav-logo">R<span>C</span>N</a>
+  <div class="nav-links">
+    <a href="/" class="nav-link">Home</a>
+    <a href="/#projects" class="nav-link">Projects</a>
+  </div>
+  <div class="nav-right">
+    <a href="/" class="nav-back">← Back</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <div class="page-eyebrow">// get in touch</div>
+  <div class="page-title">Contact<span>.</span><span class="cursor"></span></div>
+  <div class="page-divider"></div>
+
+  <!-- Intro -->
+  <div class="intro-card reveal">
+    <p>
+      I'm <strong>Sebastian</strong> — a <em>cybersecurity student</em> building tools that operate where visibility ends.
+      My focus is on <strong>dark web research, OSINT, and offensive security tooling</strong>.
+      Currently developing open-source crawlers, intelligence platforms, and custom security utilities.<br><br>
+      If you have a <em>custom project request</em>, a question about my tools, or just want to talk security —
+      feel free to reach out. I'm open to collaboration and freelance work.
+    </p>
+  </div>
+
+  <!-- Contact cards -->
+  <div class="contact-grid reveal">
+    <div class="contact-card">
+      <div class="contact-card-label">Primary contact</div>
+      <div class="contact-card-value">
+        <a href="mailto:sebastian@se-rcn.com">sebastian@se-rcn.com</a>
+      </div>
+      <div class="contact-card-sub">Fastest response. Use for project requests, questions, and collaboration.</div>
+    </div>
+    <div class="contact-card">
+      <div class="contact-card-label">Open source</div>
+      <div class="contact-card-value">
+        <a href="https://github.com/0Day-legalize" target="_blank">github.com/0Day-legalize</a>
+      </div>
+      <div class="contact-card-sub">Browse my projects, open issues, or contribute directly on GitHub.</div>
+    </div>
+  </div>
+
+  <!-- Stack -->
+  <div class="section-label reveal">Languages &amp; Stack</div>
+  <div class="lang-grid reveal">
+    <div class="lang-card">
+      <div class="lang-icon">🐍</div>
+      <div class="lang-name">Python</div>
+      <div class="lang-level active">● Active</div>
+      <div class="lang-bar"><div class="lang-bar-fill full" style="width:90%"></div></div>
+    </div>
+    <div class="lang-card">
+      <div class="lang-icon">⚡</div>
+      <div class="lang-name">JavaScript</div>
+      <div class="lang-level active">● Active</div>
+      <div class="lang-bar"><div class="lang-bar-fill full" style="width:85%"></div></div>
+    </div>
+    <div class="lang-card">
+      <div class="lang-icon">🔵</div>
+      <div class="lang-name">Go</div>
+      <div class="lang-level active">● Active</div>
+      <div class="lang-bar"><div class="lang-bar-fill full" style="width:75%"></div></div>
+    </div>
+    <div class="lang-card">
+      <div class="lang-icon">⚙️</div>
+      <div class="lang-name">C</div>
+      <div class="lang-level learning">◐ Learning</div>
+      <div class="lang-bar"><div class="lang-bar-fill mid" style="width:30%"></div></div>
+    </div>
+  </div>
+
+  <!-- What I build -->
+  <div class="section-label reveal">What I build</div>
+  <div class="tags-row reveal">
+    <span class="tag red">Dark Web Tools</span>
+    <span class="tag red">OSINT Platforms</span>
+    <span class="tag">Web Crawlers</span>
+    <span class="tag">Security Research</span>
+    <span class="tag">Tor Integration</span>
+    <span class="tag">CLI Tools</span>
+    <span class="tag">Automation</span>
+    <span class="tag">Custom Requests</span>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-box reveal">
+    <p>
+      Have a <strong>custom request</strong> or a project that needs someone who works in the shadows?<br>
+      Drop me an email and I'll get back to you.
+    </p>
+    <a href="mailto:sebastian@se-rcn.com" class="btn-primary">
+      ✉ sebastian@se-rcn.com
+    </a>
+  </div>
+
+  <div class="page-footer">
+    <span>© 2026 RCN</span>
+    <span><a href="/privacy.html">Privacy Policy</a> &nbsp;·&nbsp; For research use only</span>
+  </div>
+
+</div>
+
+<script>
+// Canvas grain
+(function() {
+  const c = document.createElement('canvas');
+  c.width = 300; c.height = 300;
+  c.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;opacity:0.03;pointer-events:none;z-index:9997;mix-blend-mode:screen;';
+  const ctx = c.getContext('2d');
+  function grain() {
+    const img = ctx.createImageData(300,300);
+    for (let i=0;i<img.data.length;i+=4){const v=Math.random()*255;img.data[i]=img.data[i+1]=img.data[i+2]=v;img.data[i+3]=255;}
+    ctx.putImageData(img,0,0); requestAnimationFrame(grain);
+  }
+  grain(); document.body.appendChild(c);
+})();
+
+// Scroll reveal
+const obs = new IntersectionObserver(entries => {
+  entries.forEach((e,i) => {
+    if (e.isIntersecting) { setTimeout(()=>e.target.classList.add('visible'), i*80); obs.unobserve(e.target); }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// Animate lang bars on reveal
+const langObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.lang-bar-fill').forEach(bar => {
+        const w = bar.style.width; bar.style.width = '0';
+        setTimeout(()=>bar.style.width=w, 200);
+      });
+      langObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.2 });
+document.querySelector('.lang-grid') && langObs.observe(document.querySelector('.lang-grid'));
+</script>
+</body>
+</html>
