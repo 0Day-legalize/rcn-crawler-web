@@ -1,237 +1,321 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RCN — Job Status</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;500;600&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RCN — Job Status</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: #050505; color: #fff; font-family: 'Caveat', cursive; overflow-x: hidden; min-height: 100vh; }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* grain */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat; background-size: 200px 200px;
+}
+/* vignette */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 9998; pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.75) 100%);
+}
 
-    :root {
-      --green:      #4ade80;
-      --green-dim:  #166534;
-      --red:        #fca5a5;
-      --red-border: rgba(252,165,165,0.2);
-      --bg:         #0a0a0a;
-      --surface:    #111111;
-      --border:     rgba(255,255,255,0.07);
-      --border-h:   rgba(74,222,128,0.25);
-      --text:       #e2e8f0;
-      --text-sec:   #94a3b8;
-      --text-dim:   #64748b;
-      --label:      #cbd5e1;
-    }
+@keyframes fadeUp  { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
+@keyframes blink   { 0%,100%{opacity:1} 50%{opacity:0} }
+@keyframes pulse   { 0%,100%{opacity:1} 50%{opacity:0.3} }
+@keyframes logoPulse {
+  0%,100% { text-shadow:0 0 14px rgba(255,255,255,0.6),0 0 30px rgba(255,255,255,0.2); }
+  50%      { text-shadow:0 0 20px rgba(255,255,255,0.9),0 0 50px rgba(255,255,255,0.35); }
+}
+@keyframes navSlideDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-    html { scrollbar-width: thin; scrollbar-color: #1e3a2a transparent; }
+/* ── NAV ── */
+.nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  height:56px; background:rgba(20,20,20,0.97);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(192,57,43,0.35);
+  display:flex; align-items:center; padding:0 48px; gap:32px;
+  animation:navSlideDown 0.6s ease both;
+}
+.nav-logo {
+  font-family:'Special Elite',serif; font-size:20px; color:#fff;
+  letter-spacing:0.14em; text-decoration:none; flex-shrink:0;
+  text-shadow:0 0 14px rgba(255,255,255,0.6),0 0 30px rgba(255,255,255,0.2);
+  animation:logoPulse 3s ease-in-out infinite;
+}
+.nav-logo span { color:#ff2a2a; text-shadow:0 0 16px rgba(255,42,42,1),0 0 40px rgba(255,42,42,0.8),0 0 60px rgba(255,42,42,0.4); }
+.nav-links { display:flex; gap:28px; align-items:center; }
+.nav-link {
+  font-family:'Caveat',cursive; font-size:15px; color:#fff;
+  text-decoration:none; letter-spacing:0.04em;
+  text-shadow:0 0 10px rgba(255,255,255,0.5); transition:text-shadow 0.2s;
+}
+.nav-link:hover { text-shadow:0 0 16px rgba(255,255,255,1),0 0 40px rgba(255,255,255,0.5); }
+.nav-right { margin-left:auto; display:flex; gap:12px; align-items:center; }
+.nav-back {
+  height:32px; border:1px solid #2a2a2a; border-radius:2px;
+  padding:0 18px; display:flex; align-items:center;
+  font-family:'Caveat',cursive; font-size:13px; color:#888;
+  text-decoration:none; transition:border-color 0.2s, color 0.2s;
+}
+.nav-back:hover { border-color:#c0392b; color:#fff; }
+.nav-cta {
+  height:32px; background:#e8281e; border-radius:2px;
+  padding:0 18px; display:flex; align-items:center;
+  font-family:'Caveat',cursive; font-size:14px; font-weight:700; color:#fff;
+  text-decoration:none; letter-spacing:0.06em;
+  text-shadow:0 0 12px rgba(255,255,255,0.9), 0 1px 0 rgba(0,0,0,0.3);
+  box-shadow:0 0 14px rgba(232,40,30,0.9),0 0 32px rgba(232,40,30,0.5);
+  transition:background 0.2s, box-shadow 0.2s;
+}
+.nav-cta:hover { background:#ff3328; box-shadow:0 0 20px rgba(255,51,40,1),0 0 50px rgba(255,51,40,0.7); }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', system-ui, sans-serif;
-      font-size: 15px;
-      line-height: 1.6;
-      min-height: 100vh;
-      padding: 36px 24px 80px;
-      max-width: 740px;
-      margin: 0 auto;
-      position: relative;
-      overflow-x: hidden;
-    }
+@media (max-width:768px) {
+  .nav { padding:0 20px; }
+  .nav-links { display:none; }
+  .page { padding:90px 20px 60px; }
+}
 
-    body::before {
-      content: "";
-      position: fixed; inset: 0;
-      background: repeating-linear-gradient(
-        0deg, transparent, transparent 3px,
-        rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 4px
-      );
-      pointer-events: none; z-index: 100;
-    }
-    body::after {
-      content: "";
-      position: fixed; inset: 0;
-      background-image:
-        linear-gradient(rgba(74,222,128,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(74,222,128,0.03) 1px, transparent 1px);
-      background-size: 48px 48px;
-      pointer-events: none; z-index: 0;
-    }
-    * { position: relative; z-index: 1; }
+/* ── PAGE ── */
+.page { position:relative; z-index:1; max-width:760px; margin:0 auto; padding:90px 40px 80px; }
+.page-glow {
+  position:fixed; top:0; left:50%; transform:translateX(-50%);
+  width:800px; height:500px; pointer-events:none; z-index:0;
+  background:radial-gradient(ellipse at 50% 20%, rgba(80,0,0,0.18) 0%, transparent 70%);
+}
 
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
+/* ── PAGE HEADER ── */
+.page-header {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:32px; padding-bottom:20px;
+  border-bottom:1px solid rgba(192,57,43,0.15);
+  animation:fadeUp 0.6s 0.2s both;
+}
+.page-header-left { display:flex; align-items:center; gap:14px; }
+.page-header-left img { height:32px; width:32px; object-fit:contain; }
+.page-header h1 {
+  font-family:'Special Elite',serif; font-size:20px; color:#fff;
+  letter-spacing:0.1em; text-transform:uppercase;
+}
+.page-header h1 span { color:#c0392b; }
+.back-btn {
+  height:32px; border:1px solid #2a2a2a; border-radius:2px;
+  padding:0 18px; display:flex; align-items:center;
+  font-family:'Special Elite',serif; font-size:12px; color:#555;
+  text-decoration:none; letter-spacing:0.08em; text-transform:uppercase;
+  transition:border-color 0.2s, color 0.2s;
+}
+.back-btn:hover { border-color:#c0392b; color:#fff; }
 
-    /* ── Header ── */
-    header {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 28px; padding-bottom: 20px;
-      border-bottom: 1px solid var(--border);
-    }
-    .header-left { display: flex; align-items: center; gap: 14px; }
-    .header-left img { height: 30px; width: 30px; object-fit: contain; }
+/* ── CARDS ── */
+.card {
+  background:#0a0a0a;
+  border:1px solid rgba(192,57,43,0.15);
+  border-radius:2px; padding:28px 32px;
+  margin-bottom:16px;
+  box-shadow:0 0 60px rgba(0,0,0,0.8), inset 0 0 40px rgba(0,0,0,0.3);
+  transition:border-color 0.25s;
+  animation:fadeUp 0.6s both;
+}
+.card:hover { border-color:rgba(192,57,43,0.3); }
+.card:nth-child(2) { animation-delay:0.1s; }
+.card:nth-child(3) { animation-delay:0.2s; }
 
-    .cursor {
-      display: inline-block; width: 10px; height: 2px;
-      background: var(--green); vertical-align: middle; margin-left: 4px;
-      animation: blink 1s step-end infinite;
-    }
+.card-title {
+  font-family:'Special Elite',serif; font-size:12px;
+  color:#c0392b; letter-spacing:0.2em; text-transform:uppercase;
+  margin-bottom:20px;
+  display:flex; align-items:center; gap:12px;
+}
+.card-title::before { content:'§'; color:#3a0a0a; font-size:16px; }
+.card-title::after  { content:''; flex:1; height:1px; background:linear-gradient(90deg, rgba(192,57,43,0.2), transparent); }
 
-    header h1 {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 16px; color: var(--green);
-      letter-spacing: 2px; text-transform: uppercase;
-    }
-    header a {
-      font-size: 13px; color: var(--text-dim);
-      text-decoration: none;
-      border: 1px solid var(--border);
-      padding: 7px 14px; border-radius: 6px;
-      transition: all 0.15s;
-    }
-    header a:hover { color: var(--text-sec); border-color: rgba(255,255,255,0.12); }
+/* ── STATUS BADGE ── */
+.status-row { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+.badge {
+  font-family:'Special Elite',serif; font-size:11px;
+  padding:4px 14px; border-radius:1px;
+  display:inline-flex; align-items:center; gap:8px;
+  letter-spacing:0.14em; text-transform:uppercase;
+}
+.badge-pending { background:rgba(243,156,18,0.08);  color:#f39c12; border:1px solid rgba(243,156,18,0.25); }
+.badge-running { background:rgba(192,57,43,0.1);    color:#e74c3c; border:1px solid rgba(192,57,43,0.3); }
+.badge-done    { background:rgba(46,204,113,0.08);  color:#2ecc71; border:1px solid rgba(46,204,113,0.25); }
+.badge-failed  { background:rgba(192,57,43,0.08);   color:#c0392b; border:1px solid rgba(192,57,43,0.2); }
 
-    /* ── Cards ── */
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-top: 1px solid rgba(255,255,255,0.1);
-      border-radius: 8px; padding: 24px 28px;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.03);
-      transition: border-color 0.2s;
-    }
-    .card:hover { border-color: var(--border-h); }
+.dot-live {
+  width:7px; height:7px; border-radius:50%; background:#e74c3c;
+  animation:pulse 1s infinite; box-shadow:0 0 8px rgba(231,76,60,0.8);
+}
 
-    .card-title {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px; color: var(--green);
-      letter-spacing: 2px; text-transform: uppercase;
-      margin-bottom: 18px;
-      display: flex; align-items: center; gap: 10px;
-    }
-    .card-title::before { content: "//"; color: var(--green-dim); font-size: 13px; }
-    .card-title::after  { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+.status-text { font-family:'Special Elite',serif; font-size:13px; color:#555; letter-spacing:0.06em; }
 
-    /* ── Status ── */
-    .status-row { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
-    .badge {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px; padding: 5px 14px; border-radius: 4px;
-      display: inline-flex; align-items: center; gap: 8px;
-      letter-spacing: 1.5px; text-transform: uppercase;
-    }
-    .badge-pending { background: rgba(251,191,36,0.08);  color: #fde68a; border: 1px solid rgba(251,191,36,0.2); }
-    .badge-running { background: rgba(74,222,128,0.08);  color: var(--green); border: 1px solid rgba(74,222,128,0.25); }
-    .badge-done    { background: rgba(96,165,250,0.08);  color: #bfdbfe; border: 1px solid rgba(96,165,250,0.2); }
-    .badge-failed  { background: rgba(252,165,165,0.08); color: var(--red); border: 1px solid var(--red-border); }
+.meta { font-family:'Special Elite',serif; font-size:12px; color:#444; line-height:2.2; letter-spacing:0.04em; }
+.meta span { color:#666; }
 
-    .dot-live { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: pulse 1.2s infinite; box-shadow: 0 0 6px var(--green); }
+/* ── LOG ── */
+#log {
+  background:#030303; border:1px solid #111;
+  border-radius:1px; padding:16px 18px;
+  font-size:13px; line-height:1.8; color:#333;
+  height:240px; overflow-y:auto;
+  font-family:'Special Elite',serif;
+  white-space:pre-wrap; word-break:break-all;
+  letter-spacing:0.03em;
+  scrollbar-width:thin; scrollbar-color:#1a0808 transparent;
+}
 
-    .status-text { font-size: 14px; color: var(--text-sec); }
+/* ── RESULTS ── */
+.result-item {
+  border:1px solid rgba(192,57,43,0.12);
+  border-radius:1px; padding:18px 20px;
+  margin-bottom:12px;
+  background:linear-gradient(135deg, #0a0404, #080808);
+  transition:border-color 0.2s;
+}
+.result-item:hover { border-color:rgba(192,57,43,0.35); }
+.result-title {
+  font-family:'Special Elite',serif; font-size:15px;
+  color:#ccc; margin-bottom:6px;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  letter-spacing:0.04em;
+}
+.result-url {
+  font-family:'Special Elite',serif; font-size:11px;
+  color:#333; word-break:break-all; margin-bottom:10px; letter-spacing:0.04em;
+}
+.result-meta { display:flex; gap:6px; flex-wrap:wrap; }
+.rbadge {
+  font-family:'Special Elite',serif; font-size:10px;
+  padding:3px 10px; border-radius:1px;
+  letter-spacing:0.12em; text-transform:uppercase;
+}
+.rb-onion { background:rgba(192,57,43,0.1);  color:#c0392b; border:1px solid rgba(192,57,43,0.25); }
+.rb-clear { background:rgba(52,152,219,0.08); color:#5dade2; border:1px solid rgba(52,152,219,0.2); }
+.rb-term  { background:rgba(46,204,113,0.08); color:#2ecc71; border:1px solid rgba(46,204,113,0.2); }
+.rb-dl    { background:rgba(243,156,18,0.08); color:#f39c12; border:1px solid rgba(243,156,18,0.2); }
 
-    .meta { font-size: 13px; color: var(--text-dim); line-height: 2; }
-    .meta span { color: var(--text-sec); }
+/* ── EXPORT ── */
+.export-row { display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+.btn {
+  height:38px; border-radius:2px;
+  padding:0 20px; display:inline-flex; align-items:center; gap:8px;
+  font-family:'Special Elite',serif; font-size:12px;
+  letter-spacing:0.1em; text-transform:uppercase;
+  cursor:pointer; border:none; text-decoration:none; transition:all 0.2s;
+}
+.btn-primary { background:#c0392b; color:#fff; box-shadow:0 0 14px rgba(192,57,43,0.4); }
+.btn-primary:hover { background:#e8281e; box-shadow:0 0 24px rgba(232,40,30,0.7); }
+.btn-ghost { background:transparent; border:1px solid #2a2a2a; color:#555; }
+.btn-ghost:hover { border-color:#c0392b; color:#fff; }
 
-    /* ── Log ── */
-    #log {
-      background: #0a0a0a;
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 6px; padding: 16px 18px;
-      font-size: 12px; line-height: 1.8; color: var(--text-dim);
-      height: 240px; overflow-y: auto;
-      font-family: 'Share Tech Mono', monospace;
-      white-space: pre-wrap; word-break: break-all;
-      scrollbar-width: thin; scrollbar-color: #1e3a2a transparent;
-    }
+#empty {
+  font-family:'Special Elite',serif; font-size:14px;
+  color:#333; padding:32px 0; text-align:center; letter-spacing:0.06em;
+}
 
-    /* ── Results ── */
-    .result-item {
-      border: 1px solid var(--border);
-      border-radius: 8px; padding: 16px 18px;
-      margin-bottom: 10px; background: #0d0d0d;
-      transition: border-color 0.15s;
-    }
-    .result-item:hover { border-color: var(--border-h); }
-    .result-title { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .result-url { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--text-dim); word-break: break-all; margin-bottom: 10px; }
-    .result-meta { display: flex; gap: 6px; flex-wrap: wrap; }
+/* ── FOOTER ── */
+.page-footer {
+  text-align:center; margin-top:60px; padding-top:20px;
+  border-top:1px solid rgba(192,57,43,0.08);
+  font-family:'Caveat',cursive; font-size:13px; color:#333;
+}
+.page-footer a { color:#333; text-decoration:none; transition:color 0.2s; }
+.page-footer a:hover { color:#c0392b; }
 
-    .rbadge { font-family: 'Share Tech Mono', monospace; font-size: 10px; padding: 3px 10px; border-radius: 4px; font-weight: 400; letter-spacing: 0.5px; text-transform: uppercase; }
-    .rb-onion { background: rgba(252,165,165,0.08); color: var(--red);  border: 1px solid var(--red-border); }
-    .rb-clear { background: rgba(96,165,250,0.08);  color: #93c5fd; border: 1px solid rgba(96,165,250,0.2); }
-    .rb-term  { background: rgba(74,222,128,0.08);  color: var(--green); border: 1px solid rgba(74,222,128,0.2); }
-    .rb-dl    { background: rgba(251,191,36,0.08);  color: #fde68a; border: 1px solid rgba(251,191,36,0.2); }
-
-    /* ── Export buttons ── */
-    .export-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
-    .btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 9px 18px; border-radius: 6px;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase;
-      cursor: pointer; border: none; text-decoration: none; transition: all 0.15s;
-    }
-    .btn-blue  { background: rgba(96,165,250,0.07); border: 1px solid rgba(96,165,250,0.2); color: #93c5fd; }
-    .btn-blue:hover  { background: rgba(96,165,250,0.13); }
-    .btn-amber { background: rgba(251,191,36,0.07); border: 1px solid rgba(251,191,36,0.2); color: #fde68a; }
-    .btn-amber:hover { background: rgba(251,191,36,0.13); }
-
-    #empty { font-size: 14px; color: var(--text-dim); padding: 28px 0; text-align: center; }
-
-    /* ── Footer ── */
-    footer { text-align: center; margin-top: 48px; font-size: 12px; color: var(--text-dim); }
-    footer a { color: var(--text-dim); text-decoration: none; }
-
-    @media print {
-      body { background:#fff; color:#000; }
-      body::before, body::after { display:none; }
-      header a, .export-row, #log, .card:has(#log) { display:none !important; }
-      .result-item { border:1px solid #ddd; background:#fff; break-inside:avoid; }
-      .result-title,.result-url { color:#000; }
-      .rbadge { border:1px solid #ccc; color:#333; background:#f5f5f5; }
-    }
-  </style>
+@media print {
+  body { background:#fff; color:#000; }
+  body::before, body::after { display:none; }
+  .nav, .back-btn, .export-row, #log, .card:has(#log) { display:none !important; }
+  .result-item { border:1px solid #ddd; background:#fff; break-inside:avoid; }
+  .result-title,.result-url { color:#000; }
+  .rbadge { border:1px solid #ccc; color:#333; background:#f5f5f5; }
+}
+</style>
 </head>
 <body>
 
-<header>
-  <div class="header-left">
-    <img src="/logo.png" alt="RCN">
-    <h1>// Job Monitor<span class="cursor"></span></h1>
+<div class="page-glow"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="/" class="nav-logo">R<span>C</span>N</a>
+  <div class="nav-links">
+    <a href="/" class="nav-link">Home</a>
+    <a href="/#projects" class="nav-link">Projects</a>
+    <a href="/typosquat.html" class="nav-link">Typosquat</a>
+    <a href="/contact.html" class="nav-link">Contact</a>
   </div>
-  <a href="/crawler.html">&#8592; New crawl</a>
-</header>
-
-<div class="card">
-  <div class="status-row">
-    <span id="badge" class="badge badge-pending">pending</span>
-    <span id="status-text" class="status-text">Waiting in queue…</span>
+  <div class="nav-right">
+    <a href="/crawler.html" class="nav-back">← New crawl</a>
+    <a href="/contact.html" class="nav-cta">Get in touch</a>
   </div>
-  <div class="meta" id="meta"></div>
-</div>
+</nav>
 
-<div class="card">
-  <div class="card-title">Live Output</div>
-  <div id="log">Waiting for job to start…</div>
-</div>
+<div class="page">
 
-<div class="card">
-  <div class="card-title">Extracted Results</div>
-  <div class="export-row" id="export-row" style="display:none">
-    <a id="btn-download" class="btn btn-blue" href="#">[ download json.gz ]</a>
-    <button class="btn btn-amber" onclick="window.print()">[ export pdf ]</button>
+  <div class="page-header">
+    <div class="page-header-left">
+      <img src="/logo.png" alt="RCN">
+      <h1>Job <span>Monitor</span></h1>
+    </div>
+    <a href="/crawler.html" class="back-btn">← New crawl</a>
   </div>
-  <div id="results-list"></div>
-  <div id="empty">Results will appear here when the crawl finishes.</div>
-</div>
 
-<footer>
-  RCN &nbsp;&middot;&nbsp; for research use only &nbsp;&middot;&nbsp; <a href="/privacy.html">Privacy Policy</a>
-</footer>
+  <!-- Status card -->
+  <div class="card">
+    <div class="status-row">
+      <span id="badge" class="badge badge-pending">pending</span>
+      <span id="status-text" class="status-text">Waiting in queue…</span>
+    </div>
+    <div class="meta" id="meta"></div>
+  </div>
+
+  <!-- Log card -->
+  <div class="card">
+    <div class="card-title">Live Output</div>
+    <div id="log">Waiting for job to start…</div>
+  </div>
+
+  <!-- Results card -->
+  <div class="card">
+    <div class="card-title">Extracted Results</div>
+    <div class="export-row" id="export-row" style="display:none">
+      <a id="btn-download" class="btn btn-primary" href="#">&#8659; Download JSON.gz</a>
+      <button class="btn btn-ghost" onclick="window.print()">&#128438; Export PDF</button>
+    </div>
+    <div id="results-list"></div>
+    <div id="empty">Results will appear here when the crawl finishes.</div>
+  </div>
+
+  <div class="page-footer">
+    RCN &nbsp;·&nbsp; for research use only &nbsp;·&nbsp; <a href="/privacy.html">Privacy Policy</a>
+  </div>
+
+</div>
 
 <script>
+// Canvas grain
+(function() {
+  const c = document.createElement('canvas');
+  c.width = 300; c.height = 300;
+  c.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;opacity:0.03;pointer-events:none;z-index:9997;mix-blend-mode:screen;';
+  const ctx = c.getContext('2d');
+  function grain() {
+    const img = ctx.createImageData(300,300);
+    for (let i=0;i<img.data.length;i+=4){const v=Math.random()*255;img.data[i]=img.data[i+1]=img.data[i+2]=v;img.data[i+3]=255;}
+    ctx.putImageData(img,0,0); requestAnimationFrame(grain);
+  }
+  grain(); document.body.appendChild(c);
+})();
+
 const jobId = new URLSearchParams(location.search).get("id");
 if (!jobId) location.href = "/";
 
@@ -260,10 +344,10 @@ function esc(s) {
 }
 
 function colorLog(line) {
-  if (/error|fail/i.test(line))                   return `<span style="color:#fca5a5">${line}</span>`;
-  if (/warn/i.test(line))                         return `<span style="color:#fde68a">${line}</span>`;
-  if (/✓|done|success|graph|circuit/i.test(line)) return `<span style="color:#4ade80">${line}</span>`;
-  return `<span style="color:#64748b">${line}</span>`;
+  if (/error|fail/i.test(line))                   return `<span style="color:#c0392b">${line}</span>`;
+  if (/warn/i.test(line))                         return `<span style="color:#f39c12">${line}</span>`;
+  if (/✓|done|success|graph|circuit/i.test(line)) return `<span style="color:#2ecc71">${line}</span>`;
+  return `<span style="color:#3a3a3a">${line}</span>`;
 }
 
 function renderPage(p) {
@@ -299,7 +383,7 @@ async function poll() {
       job.started_at   ? `<span>Started:</span> ${new Date(job.started_at).toLocaleTimeString()}` : "",
       job.finished_at  ? `<span>Finished:</span> ${new Date(job.finished_at).toLocaleTimeString()}` : "",
       job.page_count   ? `<span>Pages:</span> ${job.page_count}` : "",
-      job.error        ? `<span style="color:#fca5a5">Error:</span> ${esc(job.error)}` : "",
+      job.error        ? `<span style="color:#c0392b">Error:</span> ${esc(job.error)}` : "",
     ].filter(Boolean).join(" &nbsp;&middot;&nbsp; ");
 
     const log     = job.log ?? "";
